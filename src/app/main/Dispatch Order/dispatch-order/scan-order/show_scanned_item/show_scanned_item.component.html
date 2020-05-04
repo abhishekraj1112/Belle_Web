@@ -1,0 +1,44 @@
+<div fxFlex fxLayout="column"  fxLayoutAlign="start" id="AddLocationMaster">
+    <div style="margin-top: -35px"  mat-dialog-title>
+        <div class="h4 mb-8 pt-16" >Show Scanned Item
+            <mat-icon (click)="cancle()" style="float: right;cursor: pointer">cancel</mat-icon>
+        </div>
+        <div  fxLayout="column"  fxLayoutAlign="start">
+            <mat-divider></mat-divider>
+        </div>
+
+
+
+            <div fxflex class="16" >
+                <div class="example-container">
+                    <table mat-table #TableSort="matSort"  matSort [dataSource]="dataSource" class=" table mat-elevation-z0" >
+                        <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column|firstAnd_Split}} </th>
+
+                            <td mat-cell *matCellDef="let element">{{element[column]}}
+<!--                                <p *ngIf="column!='action';else elseblock">{{element[column]}} </p>-->
+
+<!--                                <ng-template #elseblock>-->
+<!--                                    <button  mat-icon-button matTooltip="Click to view line" style="margin-top: -10px;background-color:#ffffff;box-shadow: 1px 1px 1px 1px #ffffff">-->
+<!--                                        <mat-icon>visibility</mat-icon>-->
+<!--                                    </button>-->
+
+<!--                                </ng-template>-->
+                            </td>
+<!--                            <td mat-cell  *matCellDef="let element">Data Not found</td>-->
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <mat-paginator  #TablePaginator="matPaginator" [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+

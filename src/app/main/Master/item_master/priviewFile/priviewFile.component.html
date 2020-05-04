@@ -1,0 +1,26 @@
+<div fxLayout="column">
+  <div  style="width:100%;height:500px;text-align: center;">
+      <img *ngIf="selectedimageData.selectedImage!=undefined && selectedimageData.selectedImage!=null && selectedimageData.selectedImage!=''"  [src]="files.length>0?selectedimageData.selectedImage:this.webApiHttp.globalurl+'/'+ selectedimageData.selectedImage" style="width:auto;height:100%;object-fit: scale-down; box-shadow: 0px 2px 4px -1px rgba(81, 81, 81, 0.2), 0px 4px 5px 0px rgba(82, 82, 82, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);" >
+  </div>
+</div>
+<div fxLayout="column">
+    <div class="parentDiv">
+        <img *ngIf="selectedimageData.main_image!=undefined && selectedimageData.main_image!='' && selectedimageData.main_image!=null"
+             (click)="this.selected_mainIndex=0;selectedimageData.selectedImage=selectedimageData.main_image"
+             [src]="files.length>0?selectedimageData.main_image:this.webApiHttp.globalurl+'/'+selectedimageData.main_image" class="footermyimageclass" >
+        <img *ngIf="selectedimageData.image_1!=undefined && selectedimageData.image_1!='' && selectedimageData.image_1!=null"
+             (click)="this.selected_mainIndex=1;selectedimageData.selectedImage=selectedimageData.image_1"
+             [src]="files.length>0?selectedimageData.image_1:this.webApiHttp.globalurl+'/'+selectedimageData.image_1" class="footermyimageclass" >
+        <img  *ngIf="selectedimageData.image_2!=undefined && selectedimageData.image_2!='' && selectedimageData.image_2!=null"
+              (click)="this.selected_mainIndex=2;selectedimageData.selectedImage=selectedimageData.image_2"
+              [src]="files.length>0?selectedimageData.image_2:this.webApiHttp.globalurl+'/'+selectedimageData.image_2" class="footermyimageclass" >
+        <img *ngIf="selectedimageData.image_3!=undefined && selectedimageData.image_3!='' && selectedimageData.image_3!=null"
+             (click)="this.selected_mainIndex=3;selectedimageData.selectedImage=selectedimageData.image_3"
+             [src]="files.length>0?selectedimageData.image_3:this.webApiHttp.globalurl+'/'+selectedimageData.image_3" class="footermyimageclass" >
+        <img *ngIf="files.length==0" src="assets/images/file_upload.png" (click)="fileUploadData.click()" class="footermyimageclass" >
+        <input  style="display: none" type="file" #fileUploadData multiple="true"
+               (change)="incomingfile($event)" accept="image/*"
+               placeholder="Upload file"/>
+       <button *ngIf="files.length>0" (click)="uplod_Submit()" style="margin-top: 30px" mat-button color="warn">Upload</button>
+    </div>
+</div>

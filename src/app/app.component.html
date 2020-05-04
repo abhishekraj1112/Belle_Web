@@ -1,0 +1,31 @@
+<!-- PROGRESS BAR -->
+<pristine-progress-bar></pristine-progress-bar>
+<!-- / PROGRESS BAR -->
+
+<!-- VERTICAL LAYOUT 1 -->
+<ngx-spinner
+    bdColor="rgba(51,51,51,0.8)"
+    size="medium"
+    color="#FFB6C1"
+    type="ball-spin"
+    fullScreen="true"
+    >
+    <p style="font-size: 20px; color: white">Loading...</p>
+</ngx-spinner>
+<ng-container *ngIf="pristineConfig.layout.style === 'vertical-layout-1'">
+    <vertical-layout-1></vertical-layout-1>
+</ng-container>
+<!-- / VERTICAL LAYOUT 1 -->
+
+<!-- THEME OPTIONS PANEL -->
+<!--<button mat-icon-button class="warn mat-elevation-z2 theme-options-button"-->
+<!--        [ngClass]="{'right-side-panel': pristineConfig.layout.sidepanel.position === 'right',-->
+<!--                    'side-panel-hidden': pristineConfig.layout.sidepanel.hidden === true}"-->
+<!--        (click)="toggleSidebarOpen('themeOptionsPanel')">-->
+<!--    <mat-icon>settings</mat-icon>-->
+<!--</button>-->
+<!--todo option buton click then sidebar open-->
+<!--<pristine-sidebar name="themeOptionsPanel" class="theme-options-sidebar" position="right" [invisibleOverlay]="true">-->
+<!--    <pristine-theme-options></pristine-theme-options>-->
+<!--</pristine-sidebar>-->
+<!-- / THEME OPTIONS PANEL -->

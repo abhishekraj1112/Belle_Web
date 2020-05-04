@@ -1,0 +1,304 @@
+<div class="page-layout simple fullwidth inner-scroll" fxLayout="column" id="AddRetailer">
+    <div class="content p-20" pristinePerfectScrollbar>
+        <div fxLayout="column" fxLayoutAlign="start">
+            <div class="pristine-card auto-width mat-elevation-z1 mb-32" fxFlex="1 0 auto" fxLayout="column"
+                 fxLayoutAlign="start">
+                <div class="h4 mb-8 p-16"  style="background-color: rgba(255,192,203,0.73)">Add Retailer
+                    <button (click)="AddRetailerByExcel()"
+                            mat-icon-button matTooltip="Add retailer by excel" style="margin-top: -10px;background-color:#ffffff;float: right;box-shadow: 1px 1px 1px 1px #ffffff">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+<!--                  <div fxLayout="column" fxLayoutAlign="start">-->
+<!--                      <mat-divider></mat-divider>-->
+<!--                  </div>-->
+                <mat-horizontal-stepper linear #stepper >
+            <mat-step [stepControl]="FirmmDetail" label="Firm Details" state="House" >
+                <div [formGroup]="FirmmDetail" >
+                    <ng-template matStepLabel matStepperIcon="edit">Firm Details</ng-template>
+                    <div fxFlex fxLayout="column" fxLayoutAlign="start">
+                        <div fxFlex="1 0 auto"   fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="10px"  fxLayoutAlign="start" fxLayoutGap="100px">
+                            <mat-form-field appearance="outline" fxFlex="40">
+                                        <mat-label>Firm Name<sup>*</sup></mat-label>
+                                        <input matInput type="text"  formControlName="firm_name" [(ngModel)]="searchfirmName" [matAutocomplete]="firm_name"  placeholder="Firm Name" >
+                                        <mat-autocomplete autoActiveFirstOption #firm_name="matAutocomplete" >
+                                            <mat-option  [value]="ret.firm_name" *ngFor="let ret of RetailerDetails|searchfirmName:searchfirmName">{{ret.firm_name}}</mat-option>
+                                        </mat-autocomplete>
+                                <mat-error
+                                      *ngIf="FirmmDetail.get('firm_name').hasError('required') && FirmmDetail.get('firm_name').dirty && FirmmDetail.get('firm_name').touched">
+                                     First Name is required*
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" fxFlex="40">
+                                    <mat-label>Gst Number<sup>*</sup></mat-label>
+                                    <input matInput type="text"  formControlName="gst"  placeholder="Gst Number" autocomplete="false">
+                                <mat-error
+                                      *ngIf="FirmmDetail.get('gst').hasError('required') && FirmmDetail.get('gst').dirty && FirmmDetail.get('gst').touched">
+                                                 Gst Number required*
+                                </mat-error>
+                                </mat-form-field>
+                        </div>
+                        <div fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="start" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="10px" fxLayoutGap="50px" >
+                            <div fxFlex="40" fxLayout="column" >
+                                <p class="Heading ">Owner 1</p>
+                                <mat-form-field appearance="outline" >
+                                    <mat-label> Name<sup>*</sup></mat-label>
+                                    <input matInput type="text"  formControlName="name"  placeholder="First Name" autocomplete="false">
+                                    <mat-error
+                                          *ngIf="FirmmDetail.get('name').hasError('required') && FirmmDetail.get('name').dirty && FirmmDetail.get('name').touched">
+                                      Name is required*
+                                    </mat-error>
+                                </mat-form-field>
+                                <div  fxLayout="row" fxLayoutGap="40px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="5px">
+                                        <mat-form-field appearance="outline"  fxFlex="45" >
+                                            <mat-label>Mobile<sup>*</sup></mat-label>
+                                            <input matInput type="tel" formControlName="mobile" placeholder="Mobile" autocomplete="false">
+                                            <mat-error
+                                                  *ngIf="FirmmDetail.get('mobile').hasError('required') && FirmmDetail.get('mobile').dirty && FirmmDetail.get('mobile').touched">
+                                             Contact Number required*
+                                            </mat-error>
+                                            <mat-error *ngIf="FirmmDetail.get('mobile').hasError('pattern') && FirmmDetail.get('mobile').hasError('maxlength')">
+                                             Invalid Mobile Number
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field appearance="outline" fxFlex="45" >
+                                            <mat-label>Mobile2</mat-label>
+                                            <input matInput type="text" formControlName="mobile2"  placeholder="Mobile2" autocomplete="false">
+                                        </mat-form-field>
+                                        <mat-error
+                                              *ngIf="FirmmDetail.get('mobile2').hasError('pattern') && FirmmDetail.get('mobile2').hasError('maxlength')">
+                                            Invalid Mobile Number
+                                        </mat-error>
+                                </div>
+                            </div>
+                            <mat-divider vertical="true" style="opacity: 0"></mat-divider>
+                            <div fxFlex="40" fxLayout="column" >
+                                    <p class="Heading">Owner 2</p>
+                                    <mat-form-field appearance="outline"  >
+                                        <mat-label> Name<sup>*</sup></mat-label>
+                                        <input matInput type="text"  formControlName="nameOwner2"  placeholder="First Name" autocomplete="false">
+                                        <mat-error
+                                              *ngIf="FirmmDetail.get('nameOwner2').hasError('required') && FirmmDetail.get('nameOwner2').dirty && FirmmDetail.get('nameOwner2').touched">
+                                          Name is required*
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                <div  fxLayout="row" fxLayoutGap="40px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="5px">
+                                            <mat-form-field appearance="outline" fxFlex="45">
+                                                <mat-label>Mobile<sup>*</sup></mat-label>
+                                                <input matInput type="tel" formControlName="MobileOwner2" placeholder="Mobile" autocomplete="false">
+                                                <mat-error
+                                                      *ngIf="FirmmDetail.get('MobileOwner2').hasError('required') && FirmmDetail.get('MobileOwner2').dirty && FirmmDetail.get('MobileOwner2').touched">
+                                                 Contact Number required*
+                                                </mat-error>
+                                                <mat-error
+                                                      *ngIf="FirmmDetail.get('MobileOwner2').hasError('pattern') && FirmmDetail.get('MobileOwner2').hasError('maxlength')">
+                                                 Invalid Mobile Number
+                                             </mat-error>
+                                            </mat-form-field>
+
+                                            <mat-form-field appearance="outline"  fxFlex="45">
+                                                <mat-label>Mobile2</mat-label>
+                                                <input matInput type="text" formControlName="Mobile2Owner2"  placeholder="Mobile2" autocomplete="false">
+                                                <mat-error
+                                                      *ngIf="FirmmDetail.get('Mobile2Owner2').hasError('pattern') && FirmmDetail.get('Mobile2Owner2').hasError('maxlength')">
+                                                Invalid Mobile Number
+                                            </mat-error>
+                                            </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        <div fxFlex="80" fxLayout="column" fxLayout.lt-sm="column" fxLayoutAlign="center">
+                               <mat-form-field appearance="outline" style="width:90%;">
+                                   <mat-label>Remark</mat-label>
+                                   <textarea matInput  formControlName="remark"  placeholder="Remark">
+                                   </textarea>
+                               </mat-form-field>
+                        </div>
+
+                    <div>
+                            <button mat-button matStepperNext>Next</button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step [stepControl]="FirmAddress" label="Firm Address" state="House" >
+                <div [formGroup]="FirmAddress">
+                    <ng-template matStepLabel>Firm Address</ng-template>
+                    <div fxFlex fxLayout="column" >
+                        <div fxFlex class="p-8" fxLayout="row wrap" fxLayoutGap="60px" fxLayoutAlign="start">
+                            <div fxFlex="40">
+                                <mat-form-field appearance="outline" style="width:100%!important;height:20%!important;" >
+                                    <mat-label>Line 1<sup>*</sup></mat-label>
+                                    <textarea matInput type="text" formControlName="line1"   placeholder="Line 1" autocomplete="false"></textarea>
+                                </mat-form-field>
+                                <span style="color: red;z-index:1;position: absolute;margin-top:7px;display:block"
+                                      *ngIf="FirmAddress.get('line1').hasError('required') && FirmAddress.get('line1').dirty && FirmAddress.get('line1').touched">
+                                required* field
+                             </span>
+                            </div>
+                            <div fxFlex="40">
+                                <mat-form-field appearance="outline" style="width:100%!important;height:50%!important;" >
+                                    <mat-label>Line 2</mat-label>
+                                    <textarea matInput type="text" formControlName="line2"  placeholder="Line 2" autocomplete="false"></textarea>
+                                </mat-form-field>
+                            </div>
+                            <div fxFlex="40">
+                                <mat-form-field appearance="outline" style="width:100%!important;" >
+                                    <mat-label>State<sup>*</sup></mat-label>
+                                    <mat-select  [(value)]="state" (selectionChange)="GetAllDist(state)" formControlName="state" matInput type="text" placeholder="Select Type" autocomplete="false">
+                                        <mat-option [value]="state.id" *ngFor="let state of AllState">{{state.state}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <span class="alert-danger" style="color: red;z-index:1;position: absolute;margin-top:-20px;display:block"
+                                      *ngIf="FirmAddress.get('state').hasError('required') && FirmAddress.get('state').dirty && FirmAddress.get('state').touched">
+                                required* field
+                             </span>
+                            </div>
+                            <div fxFlex="40">
+                                <mat-form-field appearance="outline" style="width:100%!important;" >
+                                    <mat-label>District<sup>*</sup></mat-label>
+                                    <mat-select  [(value)]="dist" matInput type="text" formControlName="district" (selectionChange)="GetAllArea(dist)" placeholder="Select Type" autocomplete="false">
+                                        <mat-option [value]="dist.dist_Id" *ngFor="let dist of AllDist">{{dist.district_name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <span class="alert-danger" style="color: red;z-index:1;position: absolute;margin-top:-20px;display:block"
+                                      *ngIf="FirmAddress.get('district').hasError('required') && FirmAddress.get('district').dirty && FirmAddress.get('district').touched">
+                                required* field
+                             </span>
+                            </div>
+                            <div fxFlex="40">
+                                <mat-form-field appearance="outline" style="width:100%!important;" >
+                                    <mat-label>Area<sup>*</sup></mat-label>
+                                    <mat-select  [(value)]="area" matInput type="text" formControlName="area" (selectionChange)="GetAllStreet(area)" placeholder="Select Type" autocomplete="false">
+                                        <mat-option [value]="area.area_Id" *ngFor="let area of AllArea">{{area.area_name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <span class="alert-danger" style="color: red;z-index:1;position: absolute;margin-top:-20px;display:block"
+                                      *ngIf="FirmAddress.get('area').hasError('required') && FirmAddress.get('area').dirty && FirmAddress.get('area').touched">
+                                required* field
+                             </span>
+                            </div>
+                            <div fxFlex="40">
+                                <mat-form-field appearance="outline" style="width:100%!important;" >
+                                    <mat-label>Street<sup>*</sup></mat-label>
+                                    <mat-select  matInput type="text" formControlName="street"  placeholder="Select Type" autocomplete="false">
+                                        <mat-option [value]="street.street_id" *ngFor="let street of Allstreet">{{street.street_name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <span class="alert-danger" style="color: red;z-index:1;position: absolute;margin-top:-20px;display:block"
+                                      *ngIf="FirmAddress.get('street').hasError('required') && FirmAddress.get('street').dirty && FirmAddress.get('street').touched">
+                                required* field
+                             </span>
+                            </div>
+                        </div>
+                        <div>
+                            <button mat-button matStepperPrevious>Back</button>
+                            <button mat-button matStepperNext>Next</button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step  [stepControl]="Retailer" label="Assign to Retailer" state="Assign">
+                <div [formGroup]="Retailer">
+                <ng-template matStepLabel>Assign to Retailer</ng-template>
+                <div fxFlex fxLayout="column" >
+                <div fxFlex class="pl-8" fxLayout="column"  fxLayoutAlign="start">
+                    <div fxFlex="23">
+                        <mat-form-field appearance="outline" style="width:40%!important;" >
+                            <mat-label>Branch</mat-label>
+                            <mat-select [(value)]="branch"  matInput type="text" formControlName="branch" (selectionChange)="GEtSalesman(branch)" placeholder="Select Type" autocomplete="false">
+                                <mat-option [value]="branch.branch_code" *ngFor="let branch of AllBranchDetail">{{branch.branch_code}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <span class="alert-danger"
+                              *ngIf="Retailer.get('branch').hasError('required') && Retailer.get('branch').dirty && Retailer.get('branch').touched">
+                                required* field
+                             </span>
+                    </div>
+                    <div fxFlex="23">
+                        <mat-form-field appearance="outline" style="width:40%!important;" >
+                            <mat-label>Grade</mat-label>
+                            <mat-select   matInput type="text" formControlName="grade"  placeholder="Select Type" autocomplete="false">
+                                <mat-option [value]="grade" *ngFor="let grade of grade">{{grade}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <span class="alert-danger"
+                              *ngIf="Retailer.get('grade').hasError('required') && Retailer.get('grade').dirty && Retailer.get('grade').touched">
+                                required* field
+                             </span>
+                    </div>
+                    <div fxFlex="23">
+                        <mat-form-field appearance="outline" style="width:40%!important;" >
+                            <mat-label>Distibutor</mat-label>
+                            <mat-select  matInput type="text" formControlName="distributor"  placeholder="Select Type" autocomplete="false">
+                                <mat-option [value]="distributor.firm_name" *ngFor="let distributor of BranchWiseDistributors" >{{distributor.firm_name}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <span class="alert-danger"
+                              *ngIf="Retailer.get('distributor').hasError('required') && Retailer.get('distributor').dirty && Retailer.get('distributor').touched">
+                                required* field
+                             </span>
+                    </div>
+                    <div fxFlex="23">
+                        <mat-form-field appearance="outline" style="width:40%!important;" >
+                            <mat-label>Salesman</mat-label>
+                            <mat-select  matInput type="text" formControlName="salesman"  placeholder="Select Type" autocomplete="false">
+                                <mat-option [value]="salesman.id" *ngFor="let salesman of Allsalesman">{{salesman.salesman}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <span class="alert-danger"
+                              *ngIf="Retailer.get('salesman').hasError('required') && Retailer.get('salesman').dirty && Retailer.get('salesman').touched">
+                                required* field
+                             </span>
+                    </div>
+
+                </div>
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button matStepperNext>Next</button>
+                </div>
+                </div>
+                </div>
+            </mat-step>
+            <mat-step label="Upload Image" state="Image">
+                <ng-template  matStepperIcon="Image">
+                   <mat-icon>done</mat-icon>
+                   </ng-template>
+                <div fxFlex fxLayout="row wrap" fxLayoutGap="10px">
+                <div class="upload-image" >
+                    <div #image class="image-wrapper"></div>
+                    <div class="browse-btn">
+                        <input type="file" #file  name="cameraImg" accept='image/*' id="cameraImg" (change)="onSelectedFile($event)" multiple/>
+                        <div class="browse-image">
+<!--                                        <mat-icon>camera_alt</mat-icon>-->
+                            <img src="assets/images/camera.png"  />
+                            <p style="font-weight: 600">Browse image</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="upload-image" *ngFor="let url of urls">
+                    <div #image class="image-wrapper"></div>
+                    <div class="browse-btn">
+                        <div class="browse-image">
+                            <!--                                        <mat-icon>camera_alt</mat-icon>-->
+                            <img [src]="url" class="img"/>
+
+                        </div>
+                    </div>
+
+                </div>
+                </div>
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button (click)="stepper.reset()">Reset</button>
+                    <button mat-button (click)="Addretailer();stepper.reset()">Save</button>
+                </div>
+            </mat-step>
+        </mat-horizontal-stepper>
+            </div>
+        </div>
+    </div>
+</div>
+

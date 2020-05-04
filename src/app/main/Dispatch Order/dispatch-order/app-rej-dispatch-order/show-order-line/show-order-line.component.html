@@ -1,0 +1,58 @@
+<div class="page-layout simple fullwidth inner-scroll"   fxLayout="column" id="appRejDispatchOrer">
+    <div class="content p-20" pristinePerfectScrollbar>
+        <div class="mb-24" fxLayout="column" fxLayoutAlign="start">
+            <div class="mat-card mat-elevation-z1" fxFlex="1 0 auto" fxLayout="column" fxLayoutAlign="start">
+                <div class="h4 mb-8 p-16" style="background-color: rgba(255,192,203,0.73)">App/rej dispatch order
+                    <div fxFlex="" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="20px">
+                        <button (click)="onClickApprove()"  color="white" matTooltip="Click to approve" mat-raised-button >
+                            <mat-icon style="color: green">thumb_up_alt</mat-icon>&nbsp;
+                            <b>Approve</b>
+                        </button>
+                        <button (click)="onClickReject()" color="white" matTooltip="Click to Reject" mat-raised-button >
+                            <mat-icon style="color:red">thumb_down_alt</mat-icon>&nbsp;
+                            <b>Reject</b>
+                        </button>
+                    </div>
+                </div>
+                <div fxFlex="" class="p-24" fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="20px" fxLayoutGap.lt-sm="0px">
+                    <div fxFlex="25">
+                        <b>Order No</b>:&nbsp;{{DataTableDetail?.order_no}}
+                    </div>
+                    <div fxFlex="25">
+                        <b>Distributor</b>:&nbsp;{{DataTableDetail?.distributor}}
+                    </div>
+                    <div fxFlex="25">
+                        <b>Total Qty</b>:&nbsp;{{DataTableDetail?.total_qty}}
+                    </div>
+                    <div fxFlex="25">
+                        <b>Scan Qty</b>:&nbsp;{{DataTableDetail?.scan_qty}}
+                    </div>
+                </div>
+                <mat-divider></mat-divider>
+                <div class="example-container p-8" >
+                    <table mat-table  matSort [dataSource]="dataSource">
+                        <ng-container *ngFor="let column of displayColumn" [matColumnDef]="column">
+                            <th mat-header-cell *matHeaderCellDef >
+                                <div class="filterHeader">
+                                    <b mat-sort-header>{{column|firstAnd_Split}}</b><br>
+                                    <input (keyup)="applyFilter($event.target.value,column)"
+                                           [placeholder]="column|firstAnd_Split">
+                                </div>
+                            </th>
+                            <td mat-cell *matCellDef="let element">{{element[column]}}
+                                <!--                                <p *ngIf="column!='Action';else elseblock">{{element[column]}}</p>-->
+                                <!--                                <ng-template #elseblock >-->
+                                <!--                                    <button  mat-icon-button> <mat-icon>visibility</mat-icon></button>-->
+                                <!--                                </ng-template>-->
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayColumn"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayColumn;"></tr>
+                    </table>
+                </div>
+                <mat-paginator  [pageSizeOptions]="[10, 20, 50,100]" showFirstLastButtons></mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>
+

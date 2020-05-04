@@ -1,0 +1,36 @@
+<div fxFlex fxLayout="column"  fxLayoutAlign="start" id="AddLocationMaster">
+    <div style="margin-top: -35px"  mat-dialog-title>
+        <div class="h4 mb-8 pt-16" >Upload Excel
+            <mat-icon (click)="cancle()" style="float: right;cursor: pointer">cancel</mat-icon>
+        </div>
+        <div  fxLayout="column"  fxLayoutAlign="start">
+            <mat-divider></mat-divider>
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="file-upload">
+            <input type="file" (change)="incomingfile($event)" accept=".xlsx,.xls" [formControl]="fileData" />
+            <mat-icon style="font-size:30px;position:absolute!important;cursor: pointer">
+                cloud_upload</mat-icon>
+        </div>
+
+    </div>
+    <div fxFlex fxLayout="column" class="p-8">
+        <mat-progress-bar style="height:7px;border-radius:20px"
+                          [color]="color"
+                          [mode]="mode"
+                          [value]="value"
+                          [bufferValue]="bufferValue">
+        </mat-progress-bar>
+    </div>
+
+    <div fxFlex fxLayout="column">
+        <button (click)="PostFileData()" [disabled]="value!=100" mat-raised-button color="warn">
+            Upload
+        </button>
+    </div>
+</div>
+
+
+
+

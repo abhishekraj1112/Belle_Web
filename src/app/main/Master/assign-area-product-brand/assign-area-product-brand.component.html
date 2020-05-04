@@ -1,0 +1,458 @@
+<div class="page-layout simple fullwidth inner-scroll" fxLayout="column" id="viewdistribution">
+    <div class="content p-20" pristinePerfectScrollbar>
+        <div class="mb-24" fxLayout="column" fxLayoutAlign="start">
+            <div class="mat-card mat-elevation-z1" fxFlex="1 0 auto" fxLayout="column" fxLayoutAlign="start">
+                <div class="h4 mb-8 p-16" style="background-color: rgba(255,192,203,0.73)">Assign Area/Product/Brand
+                </div>
+                <div fxFlex fxLayout="row" class="p-8" fxLayout.lt-sm="column" fxLayoutAlign="start">
+                        <mat-form-field appearance="outline" fxFlex="35">
+                            <mat-label>Select type for assign area and brand</mat-label>
+                            <mat-select [(value)]="type"   placeholder="Select Type" >
+                                <mat-option [value]="'RSM'" >RSM</mat-option>
+                                <mat-option [value]="'SALESPERSON'" >SALESPERSON</mat-option>
+                                <mat-option [value]="'DISTRIBUTOR'" >DISTRIBUTOR</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="start" *ngIf="type=='RSM'">
+                <mat-divider></mat-divider>
+            </div>
+                <div fxFlex fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px"  class="pl-24" *ngIf="type=='RSM'" fxLayout.lt-sm="column">
+                    <div fxFlex="35"  [formGroup]="assign" fxLayout="column" class="p-8 formfield" fxLayoutAlign="start" fxLayoutGap="10px" >
+                                <mat-form-field appearance="outline" style="width:100%!important;" >
+                                    <mat-label>Select RSM</mat-label>
+                                    <mat-select #rsm  formControlName="rsm"
+                                    (selectionChange)="GetAssignState(rsm.value);getAssignedBrand(rsm.value);GetBrand(rsm.value)" placeholder="Select Type" autocomplete="false">
+                                        <mat-option [value]="rsm.id" *ngFor="let rsm of RsmDetails" >{{rsm.rsm}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <div  fxLayout="row" fxLayoutGap="50px" fxLayoutGap.lt-sm="10px">
+                                    <div fxFlex="50">
+                                            <mat-form-field appearance="outline" style="width:100%!important;"  >
+                                                <mat-label>Select State</mat-label>
+                                                <mat-select multiple  formControlName="state" placeholder="Select Type" autocomplete="false">
+                                                    <mat-option [value]="state.id" *ngFor="let state of Allstate">{{state.state}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                    </div>
+                                        <div fxFlex="50"  class="pt-4">
+                                            <button (click)="AssignAreaToRsm()" mat-raised-button color="primary">
+                                                <mat-icon>assignment</mat-icon>Assign State
+                                            </button>
+                                        </div>
+                                    </div>
+                                <div  fxLayout="row" fxLayoutGap="50px" fxLayoutGap.lt-sm="10px">
+                                    <div fxFlex="50">
+                                            <mat-form-field  appearance="outline" style="width:100%!important;" >
+                                                <mat-label>Select Brand</mat-label>
+                                                <mat-select #mySel multiple  formControlName="brand"  placeholder="Select Type" autocomplete="false">
+                                                    <mat-option *ngIf="Allbrand.length>0"  (click)="selectAllBrand($event)"
+                                                                [value]="'0'">Select All
+                                                    </mat-option>
+                                                    <mat-option  [value]="brand.brandnm" *ngFor="let brand of Allbrand">{{brand.brandnm}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                    </div>
+                                            <div fxFlex="50"  class="pt-4">
+                                                <button (click)="AssignBrand()" mat-raised-button color="primary">
+                                                    <mat-icon>assignment</mat-icon>Assign Brand
+                                                </button>
+                                            </div>
+                                    </div>
+                    </div>
+                    <div fxFlex="65" fxLayout="row"  fxLayoutAlign="start" fxLayoutGap="30px" *ngIf="dataSourceAssignStateToRsm?.data?.length>0 || datasourceAssignBrandToRsm?.data?.length>0">
+                        <mat-divider [vertical]="true"></mat-divider>
+                        <div fxFlex="50"  fxLayout="column" fxLayoutAlign="start" *ngIf="dataSourceAssignStateToRsm?.data?.length>0">
+                            <div class="example-container">
+                                        <table mat-table #sortAssignStateToRsm="matSort" matSort [dataSource]="dataSourceAssignStateToRsm" class=" table mat-elevation-z0" >
+                                            <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+                                                <th mat-header-cell *matHeaderCellDef >
+                                                    <div class="filterHeader">
+                                                        <b mat-sort-header>{{column|firstAnd_Split}}</b><br>
+                                                        <input (keyup)="applyFilterStateToRsm($event.target.value,column)"
+                                                               *ngIf="column!='action'"
+                                                               [placeholder]="column|firstAnd_Split">
+                                                    </div>
+                                                </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <p *ngIf="column!='action';else elseblock">  {{element[column]}} </p>
+                                                    <ng-template #elseblock>
+                                                        <button (click)="deleteAssignArea(element)" mat-icon-button>
+                                                            <mat-icon>delete</mat-icon>
+                                                        </button>
+                                                    </ng-template>
+                                                </td>
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                        </table>
+                                        <mat-paginator  #paginatorAssignStateToRsm="matPaginator" [pageSizeOptions]="[5, 10]" showFirstLastButtons></mat-paginator>
+                                 </div>
+                            </div>
+                        <mat-divider  [vertical]="true"></mat-divider>
+                        <div fxFlex="50" fxLayout="column" fxLayoutAlign="start" *ngIf="datasourceAssignBrandToRsm?.data?.length>0">
+                            <div class="example-container">
+                                        <table mat-table #sortAssignBrandToRsm="matSort" matSort [dataSource]="datasourceAssignBrandToRsm" class=" table mat-elevation-z0" >
+                                            <ng-container *ngFor="let column of displayedColumnsBrandRsm" [matColumnDef]="column">
+                                                <th mat-header-cell *matHeaderCellDef >
+                                                    <div class="filterHeader">
+                                                        <b mat-sort-header>{{column|firstAnd_Split}}</b><br>
+                                                        <input (keyup)="applyFilterBrandToRsm($event.target.value,column)"
+                                                               *ngIf="column!='action'"
+                                                               [placeholder]="column|firstAnd_Split">
+                                                    </div>
+                                                </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <p *ngIf="column!='action';else elseblock">  {{element[column]}} </p>
+                                                    <ng-template #elseblock>
+                                                        <button (click)="deleteAssignBrand(element)" mat-icon-button>
+                                                            <mat-icon>delete</mat-icon>
+                                                        </button>
+                                                    </ng-template>
+                                                </td>
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumnsBrandRsm"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumnsBrandRsm;"></tr>
+                                        </table>
+                                        <mat-paginator #paginatorAssignBrandToRsm="matPaginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                             </div>
+                                    </div>
+                    </div>
+
+            </div>
+                <div fxFlex fxLayout="column" fxLayoutAlign="start"   class="pl-24" *ngIf="type=='SALESPERSON'" fxLayout.lt-sm="column">
+                    <mat-tab-group>
+                        <mat-tab label="Assign Area">
+                            <div [formGroup]="assignarea" fxFlex fxLayout="row" fxLayoutGap="30px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="10px" class="p-8" fxLayoutAlign="start">
+                                <div fxFlex="35" fxLayout="column" class="formfield" fxLayoutAlign="start" >
+                                        <mat-form-field appearance="outline"  >
+                                        <mat-label>Select Branch</mat-label>
+                                        <mat-select #branch  formControlName="branch"  (selectionChange)="GetRsm(type,branch.value)" placeholder="Select Type" autocomplete="false">
+                                            <mat-option [value]="branch.branch_code" *ngFor="let branch of AllBranchDetail" >{{branch.branch_code}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                        <mat-form-field appearance="outline"  >
+                                            <mat-label>Select Salesperson</mat-label>
+                                            <mat-select #rsm_id formControlName="salesperson"  (selectionChange)="GetAssignAreaToSp(rsm_id.value);getAssignedBrand(rsm_id.value);GetAssignRetailer(rsm_id.value);GetBrand(rsm_id.value)" placeholder="Select Type" autocomplete="false">
+                                                <mat-option [value]="rsm.id" *ngFor="let rsm of RsmDetails" >{{rsm.rsm}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline"  >
+                                            <mat-label>Select State</mat-label>
+                                            <mat-select #state formControlName="state"  (selectionChange)="GetDistrict(state.value)" placeholder="Select Type" autocomplete="false">
+                                                <mat-option [value]="state.id" *ngFor="let state of Allstate">{{state.state}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field  appearance="outline"  >
+                                            <mat-label>Select District</mat-label>
+                                            <mat-select #distr formControlName="dist"  (selectionChange)="GetAreaTodist(distr.value,rsm_id.value)" placeholder="Select Type" autocomplete="false">
+                                                <mat-option [value]="dist.dist_Id" *ngFor="let dist of DistList">{{dist.district_name}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <div fxFlex fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutGap="10px">
+                                            <mat-form-field  appearance="outline" fxFlex="47" >
+                                                <mat-label>Select Area</mat-label>
+                                                <mat-select multiple  formControlName="area"  placeholder="Select Type" >
+                                                    <mat-option [value]="area.area_Id" *ngFor="let area of AllArea">{{area.area_name}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <div fxFlex="47" class="pt-8">
+                                                <button (click)="AssignAreaTosp()" mat-raised-button color="primary" >
+                                                    <mat-icon>assignment</mat-icon>Assign Area
+                                                </button>
+                                            </div>
+                                        </div>
+                                </div>
+                                <mat-divider *ngIf="datasourceAssignedAreaToSp?.data?.length>0" [vertical]="true"></mat-divider>
+                                    <div fxFlex="65" class="example-container" *ngIf="datasourceAssignedAreaToSp?.data?.length>0">
+                                        <table  mat-table  matSort [dataSource]="datasourceAssignedAreaToSp" #sortAssignAreaToSp="matSort">
+                                                <ng-container *ngFor="let column of ColumnAssignedAreaSp" [matColumnDef]="column">
+                                                    <th mat-header-cell *matHeaderCellDef >
+                                                        <div class="filterHeader">
+                                                            <b mat-sort-header>{{column|firstAnd_Split}}</b><br>
+                                                            <input (keyup)="applyFilterAreaToSp($event.target.value,column)"
+                                                                   *ngIf="column!='action'"
+                                                                   [placeholder]="column|firstAnd_Split">
+                                                        </div>
+                                                    </th>
+                                                    <td mat-cell *matCellDef="let element">
+                                                        <p *ngIf="column!='action';else elseblock">  {{element[column]}} </p>
+                                                        <ng-template #elseblock>
+                                                            <button (click)="DeleteAssignAreaToDist(element)" mat-icon-button>
+                                                                <mat-icon>delete</mat-icon>
+                                                            </button>
+                                                        </ng-template>
+                                                    </td>
+                                                </ng-container>
+                                                <tr mat-header-row *matHeaderRowDef="ColumnAssignedAreaSp"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: ColumnAssignedAreaSp;"></tr>
+                                            </table>
+                                        <mat-paginator  #paginatorAssignAreaToSp="matPaginator"  [pageSizeOptions]="[5, 10]" showFirstLastButtons></mat-paginator>
+                                     </div>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Assign Brand">
+                          <div fxFlex fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="10px" fxLayoutGap="30px">
+                            <div fxFlex="50" fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="10px"  class="p-16 formfield" fxLayoutGap="30px">
+                                <mat-form-field  appearance="outline" fxFlex="50">
+                                    <mat-label>Select Brand</mat-label>
+                                    <mat-select multiple [(value)]="brand"  placeholder="Select Type" >
+                                        <mat-option *ngIf="Allbrand.length>0"  (click)="selectAllBrand($event)"
+                                                    [value]="'0'">Select All
+                                        </mat-option>
+                                        <mat-option [value]="brand.brandnm" *ngFor="let brand of Allbrand">{{brand.brandnm}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <div fxFlex="50" class="pt-8">
+                                    <button (click)="AssignBrandTosp()" mat-raised-button color="primary">
+                                        <mat-icon>assignment</mat-icon>Assign Brand
+                                    </button>
+                                </div>
+                            </div>
+                            <mat-divider *ngIf="datasourceAssignBrandTosp?.data?.length>0" [vertical]="true"></mat-divider>
+                            <div fxFlex="50" class="example-container" *ngIf="datasourceAssignBrandTosp?.data?.length>0">
+                                <table  mat-table #sortAssignBrandToSp="matSort" matSort [dataSource]="datasourceAssignBrandTosp">
+                                    <ng-container *ngFor="let column of displayedColumnsBrandSp" [matColumnDef]="column">
+                                        <th mat-header-cell *matHeaderCellDef >
+                                            <div class="filterHeader">
+                                                <b mat-sort-header>{{column|firstAnd_Split}}</b><br>
+                                                <input (keyup)="applyFilterBrandToSp($event.target.value,column)"
+                                                       *ngIf="column!='action'"
+                                                       [placeholder]="column|firstAnd_Split">
+                                            </div>
+                                        </th>
+
+                                        <td mat-cell *matCellDef="let element">
+                                            <p *ngIf="column!='action';else elseblock">  {{element[column]}} </p>
+                                            <ng-template #elseblock>
+                                                <button (click)="deleteAssignBrand(element)" mat-icon-button>
+                                                    <mat-icon>delete</mat-icon>
+                                                </button>
+                                            </ng-template>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsBrandSp"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsBrandSp;"></tr>
+                                </table>
+                                <mat-paginator #paginatorAssignBrandToSp="matPaginator" [pageSizeOptions]="[5, 10]" showFirstLastButtons></mat-paginator>
+                            </div>
+                        </div>
+                        </mat-tab>
+                        <mat-tab label="Assign Retailer">
+                            <div fxFlex fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="10px" class="p-8 formfield" fxLayoutGap="20px">
+                                    <mat-form-field  appearance="outline" fxFlex="33">
+                                        <mat-label>Select Retailer Area</mat-label>
+                                        <mat-select [(value)]="areaId" matInput type="brand" (selectionChange)="GetRetailerTosp(areaId,rsm_id.value)" placeholder="Select Type" autocomplete="false">
+                                            <mat-option [value]="assignarea.area_Id" *ngFor="let assignarea of AssignAreaToSp">{{assignarea.area_name}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <mat-form-field  appearance="outline" fxFlex="33" >
+                                        <mat-label>Select Retailer</mat-label>
+                                        <mat-select multiple [(value)]="ret_id"   placeholder="Select Type" >
+                                            <mat-option [value]="ret.retailer_id" *ngFor="let ret of Retailer">{{ret.firm_name}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                <div fxFlex="33" class="pt-8">
+                                    <button (click)="AssignRetailer()" mat-raised-button color="primary">
+                                        <mat-icon>assignment</mat-icon>Assign Retailer
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="example-container" *ngIf="datasourceAssignRetailerTosp?.data?.length>0">
+                                    <table  mat-table  matSort [dataSource]="datasourceAssignRetailerTosp" #sortAssignRetailerToSp="matSort">
+                                        <ng-container *ngFor="let column of columnAssignretailerSp" [matColumnDef]="column">
+                                            <th mat-header-cell *matHeaderCellDef >
+                                                <div class="filterHeader">
+                                                    <b mat-sort-header>{{column|firstAnd_Split}}</b><br>
+                                                    <input (keyup)="applyFilterRetailerToSp($event.target.value,column)"
+                                                           *ngIf="column!='action'"
+                                                           [placeholder]="column|firstAnd_Split">
+                                                </div>
+                                            </th>
+
+                                            <td mat-cell *matCellDef="let element">
+                                                <p *ngIf="column!='action';else elseblock">  {{element[column]}} </p>
+                                                <ng-template #elseblock>
+                                                    <button (click)="DeleteAssignRetailer(element)" mat-icon-button>
+                                                        <mat-icon>delete</mat-icon>
+                                                    </button>
+                                                </ng-template>
+                                            </td>
+                                        </ng-container>
+
+                                        <tr mat-header-row *matHeaderRowDef="columnAssignretailerSp"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: columnAssignretailerSp;"></tr>
+                                    </table>
+                                    <mat-paginator #paginatorAssignRetailerToSp="matPaginator" [pageSizeOptions]="[5, 10]" showFirstLastButtons></mat-paginator>
+                                </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+                <div fxFlex fxLayout="column" fxLayoutAlign="start"   class="pl-24" *ngIf="type=='DISTRIBUTOR'" fxLayout.lt-sm="column">
+                    <mat-tab-group>
+                        <mat-tab label="Assign Area">
+                            <div  [formGroup]="assignareatodistributor" fxFlex fxLayout="row" class="p-8" fxLayoutGap="30px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="10px" fxLayoutAlign="start">
+                                    <div fxFlex="35" fxLayout="column" class="formfield" fxLayoutAlign="start" >
+                                        <mat-form-field appearance="outline"  >
+                                            <mat-label>Select Distributor</mat-label>
+                                            <mat-select #dist_id  formControlName="distributor" (selectionChange)="GetAssignAreaToDistributor(dist_id.value);getAssignedBrandToDistributor(dist_id.value);GetAssignRetailer(dist_id.value);GetBrand(dist_id.value)"  placeholder="Select Type" >
+                                                <mat-option [value]="dist.id" *ngFor="let dist of AllDistributors" >{{dist.firm_name}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline"  >
+                                            <mat-label>Select State</mat-label>
+                                            <mat-select #state formControlName="state" (selectionChange)="GetDistrict(state.value)" placeholder="Select Type" autocomplete="false">
+                                                <mat-option [value]="state.id" *ngFor="let state of Allstate">{{state.state}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field  appearance="outline"  >
+                                            <mat-label>Select District</mat-label>
+                                            <mat-select #distr formControlName="dist" (selectionChange)="GetAreaTodist(distr.value,dist_id.value)" placeholder="Select Type" autocomplete="false">
+                                                <mat-option [value]="dist.dist_Id" *ngFor="let dist of DistList">{{dist.district_name}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <div fxFlex fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutGap="20px">
+                                            <mat-form-field  appearance="outline"  fxFlex="47">
+                                                <mat-label>Select Area</mat-label>
+                                                <mat-select multiple  formControlName="area"  placeholder="Select Type" autocomplete="false">
+                                                    <mat-option [value]="area.area_Id" *ngFor="let area of AllArea">{{area.area_name}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <div fxFlex="47" class="pt-4">
+                                                <button (click)="AssignAreaToDistributor()" mat-raised-button color="primary">
+                                                    <mat-icon>assignment</mat-icon>Assign Area
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <mat-divider *ngIf="datasourceAssignAreaToDB?.data?.length>0" [vertical]="true"></mat-divider>
+                                    <div class="example-container" *ngIf="datasourceAssignAreaToDB?.data?.length>0">
+                                            <table  mat-table #sortAssignAreaToDb="matSort"  matSort [dataSource]="datasourceAssignAreaToDB">
+                                                <ng-container *ngFor="let column of ColumnAssignedAreaDb" [matColumnDef]="column">
+                                                    <th mat-header-cell *matHeaderCellDef >
+                                                        <div class="filterHeader">
+                                                            <b mat-sort-header>{{column|firstAnd_Split}}</b><br>
+                                                            <input (keyup)="applyFilterAreaToDb($event.target.value,column)"
+                                                                   *ngIf="column!='action'"
+                                                                   [placeholder]="column|firstAnd_Split">
+                                                        </div>
+                                                    </th>
+                                                    <td mat-cell *matCellDef="let element">
+                                                        <p *ngIf="column!='action';else elseblock">  {{element[column]}} </p>
+                                                        <ng-template #elseblock>
+                                                            <button (click)="DeleteAssignAreaToDist(element)" mat-icon-button>
+                                                                <mat-icon>delete</mat-icon>
+                                                            </button>
+                                                        </ng-template>
+                                                    </td>
+                                                </ng-container>
+                                                <tr mat-header-row *matHeaderRowDef="ColumnAssignedAreaDb"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: ColumnAssignedAreaDb;"></tr>
+                                            </table>
+                                            <mat-paginator #paginatorAssignAreaToDb="matPaginator"  [pageSizeOptions]="[5, 10]" showFirstLastButtons></mat-paginator>
+                                        </div>
+                                </div>
+                        </mat-tab>
+                        <mat-tab label="Assign Brand">
+                            <div fxFlex fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="10px" fxLayoutGap="20px">
+                                <div fxFlex="50" fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="10px" class="p-8 formfield" fxLayoutGap="30px">
+                                    <mat-form-field  appearance="outline" fxFlex="50" >
+                                        <mat-label>Select Brand</mat-label>
+                                        <mat-select multiple [(value)]="distributorsbrand"  placeholder="Select Type" autocomplete="false">
+                                            <mat-option *ngIf="Allbrand.length>0"  (click)="selectAllBrand($event)"
+                                                        [value]="'0'">Select All
+                                            </mat-option>
+                                            <mat-option [value]="brand.brandnm" *ngFor="let brand of Allbrand">{{brand.brandnm}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <div fxFlex="50"  class="pt-8">
+                                        <button (click)="AssignBrandToDistributor()" mat-raised-button color="primary">
+                                            <mat-icon>assignment</mat-icon>Assign Brand
+                                        </button>
+                                    </div>
+                                </div>
+                                <mat-divider *ngIf="datasourceAssignBrandToDb?.data?.length>0" [vertical]="true"></mat-divider>
+                                <div  class="example-container" *ngIf="datasourceAssignBrandToDb?.data?.length>0">
+                                        <table  mat-table #sortAssignBrandToDb="matSort" matSort [dataSource]="datasourceAssignBrandToDb"  >
+                                            <ng-container *ngFor="let column of displayedColumnsBrandDb" [matColumnDef]="column">
+                                                <th mat-header-cell *matHeaderCellDef >
+                                                    <div class="filterHeader">
+                                                        <b mat-sort-header>{{column|firstAnd_Split}}</b><br>
+                                                        <input (keyup)="applyFilterBrandToDb($event.target.value,column)"
+                                                               *ngIf="column!='action'"
+                                                               [placeholder]="column|firstAnd_Split">
+                                                    </div>
+                                                </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <p *ngIf="column!='action';else elseblock">  {{element[column]}} </p>
+                                                    <ng-template #elseblock>
+                                                        <button (click)="deleteAssignBrand(element)"  mat-icon-button>
+                                                            <mat-icon>delete</mat-icon>
+                                                        </button>
+                                                    </ng-template>
+                                                </td>
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumnsBrandDb"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumnsBrandDb;"></tr>
+                                        </table>
+                                        <mat-paginator #paginatorAssignBrandToDb="matPaginator"  [pageSizeOptions]="[5, 10]" showFirstLastButtons></mat-paginator>
+                                    </div>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Assign Retailer">
+                            <div fxFlex fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="10px" class="p-8 formfield" fxLayoutGap="20px">
+                                <mat-form-field  appearance="outline" fxFlex="33" >
+                                    <mat-label>Select Retailer Area</mat-label>
+                                    <mat-select [(value)]="areaIdToDist" matInput type="brand" (selectionChange)="GetRetailerTosp(areaIdToDist,dist_id.value)" placeholder="Select Type" autocomplete="false">
+                                        <mat-option [value]="assignarea.area_Id" *ngFor="let assignarea of AssignAreaToDist">{{assignarea.area_name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field  appearance="outline" fxFlex="33">
+                                    <mat-label>Select Retailer</mat-label>
+                                    <mat-select multiple [(value)]="retailerIdToDist"  matInput type="brand" placeholder="Select Type" autocomplete="false">
+                                        <mat-option [value]="retailer.retailer_id" *ngFor="let retailer of Retailer">{{retailer.firm_name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <div fxFlex="33" class="pt-8">
+                                    <button (click)="AssignRetailerToDistributor()" mat-raised-button color="primary">
+                                        <mat-icon>assignment</mat-icon>Assign Retailer
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="example-container" *ngIf="datasourceAssignRetailerToDb?.data?.length>0">
+                                    <table  mat-table #sortAssignRetailerToDb="matSort" matSort [dataSource]="datasourceAssignRetailerToDb">
+                                        <ng-container *ngFor="let column of columnAssignretailerDb" [matColumnDef]="column">
+                                            <th mat-header-cell *matHeaderCellDef>
+                                                <div class="filterHeader">
+                                                    <b mat-sort-header>{{column|firstAnd_Split}}</b><br>
+                                                    <input (keyup)="applyFilterRetailerToDb($event.target.value,column)"
+                                                           *ngIf="column!='action'"
+                                                           [placeholder]="column|firstAnd_Split">
+                                                </div>
+                                            </th>
+                                            <td mat-cell *matCellDef="let element">
+                                                <p *ngIf="column!='action';else elseblock">  {{element[column]}} </p>
+                                                <ng-template #elseblock>
+                                                    <button (click)="DeleteAssignRetailer(element)" mat-icon-button>
+                                                        <mat-icon>delete</mat-icon>
+                                                    </button>
+                                                </ng-template>
+                                            </td>
+                                        </ng-container>
+                                        <tr mat-header-row *matHeaderRowDef="columnAssignretailerDb"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: columnAssignretailerDb;"></tr>
+                                    </table>
+                                    <mat-paginator #paginatorAssignRetailerToDb="matPaginator"  [pageSizeOptions]="[5, 10]" showFirstLastButtons></mat-paginator>
+                                </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

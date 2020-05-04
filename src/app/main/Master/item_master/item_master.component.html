@@ -1,0 +1,51 @@
+<div class="page-layout simple fullwidth inner-scroll" fxLayout="column" id="item_master_css">
+    <div class="content p-20" pristinePerfectScrollbar>
+        <div class="mb-24" fxLayout="column" fxLayoutAlign="start">
+            <div class="mat-card mat-elevation-z1" fxFlex="1 0 auto" fxLayout="column" fxLayoutAlign="start">
+                <div class="h4 mb-8 p-16" style="background-color: rgba(255,192,203,0.73)">Item Master
+                </div>
+                <!--                  <div fxLayout="column" fxLayoutAlign="start">-->
+                <!--                      <mat-divider></mat-divider>-->
+                <!--                  </div>-->
+                <div fxflex fxLayout="column" class="p-24">
+                    <div class="example-container">
+                        <table mat-table #Sort="matSort" matSort [dataSource]="dataSource"
+                               class=" table mat-elevation-z0">
+                            <ng-container [sticky]="column=='Image'" [stickyEnd]="column=='Action'"
+                                          *ngFor="let column of displayColumn" [matColumnDef]="column">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div class="filterHeader">
+                                        <b mat-sort-header>{{column|firstAnd_Split}}</b><br>
+                                        <input (keyup)="applyFilter($event.target.value,column)"
+                                               *ngIf="column!='Action' && column!='Image'"
+                                               [placeholder]="column|firstAnd_Split">
+                                    </div>
+                                </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <img *ngIf="column=='Image'"
+                                         [src]="WebApiHttp.globalurl+'/'+element['main_image']"/>
+                                    <p *ngIf="column!='Action';else elseblock">{{element[column]}}</p>
+                                    <ng-template #elseblock>
+                                        <button [matTooltip]="'Upload Image'" mat-icon-button (click)="priviewFile(element)">
+                                            <mat-icon>add_photo_alternate</mat-icon>
+                                        </button>
+                                        <button [matTooltip]="'Add New Inventory'" mat-icon-button (click)="priviewFile(element)">
+                                            <mat-icon>add_circle_outline</mat-icon>
+                                        </button>
+                                    </ng-template>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayColumn"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayColumn;"></tr>
+                        </table>
+                    </div>
+                    <mat-paginator (page)="myPagginaterEvent($event)" [pageSizeOptions]="pageSizeOptions"
+                                   [pageSize]="RowsPerPage" [length]="length"
+                                   showFirstLastButtons></mat-paginator>
+                </div>
+            </div>
+        </div>
+        <!--                </div>-->
+
+    </div>
+</div>

@@ -1,0 +1,80 @@
+<div class="page-layout simple fullwidth inner-scroll" fxLayout="column" id="showOrder">
+    <div class="content p-20" pristinePerfectScrollbar>
+        <div class="mb-24" fxLayout="column" fxLayoutAlign="start">
+            <div class="mat-card mat-elevation-z1" fxFlex="1 0 auto" fxLayout="column" fxLayoutAlign="start">
+                <div class="h4 mb-8 p-16" style="background-color: rgba(255,192,203,0.73)">Show Order
+                </div>
+                <div fxFlex="'1 0 auto" fxLayout="row wrap" class="p-16"  fxLayoutAlign="start" fxLayoutGap="10px" fxLayoutGap.lt-sm="0px" fxLayout.lt-sm="column">
+                    <mat-form-field appearance="outline"  fxFlex="22" >
+                            <mat-label>Select Branch</mat-label>
+                            <mat-select [(value)]="branch"   matInput type="rsm" (selectionChange)="GEtSalesman(branch);GetRetailer(branch);GetDistributor(branch)" placeholder="Select Type" autocomplete="false">
+                                <mat-option [value]="branch.branch_code" *ngFor="let branch of AllBranch" >{{branch.branch_code}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    <mat-form-field appearance="outline" fxFlex="22" >
+                        <mat-label>Select retailer</mat-label>
+                        <mat-select [(value)]="retailer"   matInput type="rsm"  placeholder="Select Type" autocomplete="false">
+                            <mat-option [value]="''">--All--</mat-option>
+                            <mat-option [value]="ret.firm_name" *ngFor="let ret of allRetailer">{{ret.firm_name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline"  fxFlex="22">
+                        <mat-label>Select Salesperson</mat-label>
+                        <mat-select [(value)]="sp"   matInput type="rsm"  placeholder="Select Type" autocomplete="false">
+                            <mat-option [value]="''">--All--</mat-option>
+                            <mat-option [value]="sp.id" *ngFor="let sp of Allsalesman">{{sp.salesman}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" fxFlex="22" >
+                        <mat-label>Select Order Status</mat-label>
+                        <mat-select [(value)]="order"  matInput type="rsm"  placeholder="Select Type" autocomplete="false">
+                            <mat-option [value]="''" >--None--</mat-option>
+                            <mat-option [value]="'Pending'" >Pending</mat-option>
+                            <mat-option [value]="'Approved'" >Approved</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline"  fxFlex="22">
+                        <mat-label>Select Distributor</mat-label>
+                        <mat-select [(value)]="dist"   matInput type="rsm"  placeholder="Select Type" autocomplete="false">
+                            <mat-option [value]="''">--All--</mat-option>
+                            <mat-option [value]="dist.firm_name" *ngFor="let dist of allDistributor" >{{dist.firm_name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field  appearance="outline"   fxFlex="22">
+                        <mat-label>From Date</mat-label>
+                        <input #from_date matInput readonly [matDatepicker]="picker1" [(ngModel)]="date">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field  appearance="outline"   fxFlex="22">
+                        <mat-label>To Date</mat-label>
+                        <input #to_date  matInput [matDatepicker]="picker2" readonly [(ngModel)]="serializedDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                    <div  fxFlex="22">
+                        <button (click)="dataFilter()" mat-raised-button color="primary">
+                            <mat-icon>search</mat-icon>show
+                        </button>
+                    </div>
+                </div>
+                <div fxFlex="" fxLayout="row" class="p-16" fxLayoutAlign="start" fxLayoutGap="10px" fxLayout.lt-sm="column">
+                    <div class="square"></div>
+                    <div>Got Order / Pending</div>
+                    <div class="square3"></div>
+                    <div>Order form Not Uploaded / Pending</div>
+                    <div class="square1"></div>
+                    <div>Approved</div>
+                    <div class="square2"></div>
+                    <div>Reject</div>
+
+                </div>
+                 <mat-divider></mat-divider>
+                <div class="ng-table table_paginator">
+                    <ng2-smart-table [settings]="serachresult" (edit)="onClickAddOrder($event)" (delete)="deleteOrder($event)" (custom)="onClickDetails($event)"
+                                     [source]="serachresultdatasource"></ng2-smart-table>
+                </div>
+                </div>
+        </div>
+    </div>
+</div>

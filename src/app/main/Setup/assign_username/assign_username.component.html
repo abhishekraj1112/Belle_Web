@@ -1,0 +1,103 @@
+<div class="page-layout simple fullwidth inner-scroll" fxLayout="column" id="AddLocationMaster">
+    <div class="content p-20" pristinePerfectScrollbar>
+        <div class="mb-24" fxLayout="column" fxLayoutAlign="start">
+            <div class="mat-card mat-elevation-z1" fxFlex="1 0 auto" fxLayout="column" fxLayoutAlign="start">
+                <div class="h4 mb-8 p-16" style="background-color: rgba(255,192,203,0.73)">Assign UserName/Password
+<!--                    <div fxFlex="" fxLayout="row" fxLayoutAlign="end" fxLayoutGap="20px">-->
+<!--                        <button  color="white" matTooltip="Click to approve" mat-raised-button >-->
+<!--                            <mat-icon>add</mat-icon>-->
+<!--                            <b>Create role</b>-->
+<!--                        </button>-->
+<!--                    </div>-->
+                </div>
+
+                <div   fxFlex="1 0 auto" fxLayout="column " fxLayoutAlign="start" class="p-24" fxLayoutGap="10px" fxLayoutGap.lt-sm="10px" fxLayout.lt-sm="column">
+                    <div [formGroup]="UserForm" fxFlex="50" class="pt-16" fxLayout="column " fxLayoutAlign="start">
+                            <div fxFlex fxLayout="row wrap" fxLayoutGap="30px">
+                                <mat-form-field appearance="outline"   fxFlex="30">
+                                    <mat-label>Select Role<sup>*</sup></mat-label>
+                                    <mat-select   formControlName="role" (selectionChange)="GetuserList()"  placeholder="Select Salesman"  >
+                                        <mat-option [value]="role.role_name" *ngFor="let role of GetUserRoleDetail" >{{role.role_name|firstAnd_Split}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline"   fxFlex="30" *ngIf="UserForm.get('role').value!='Admin'">
+                                    <mat-label>Select Branch<sup>*</sup></mat-label>
+                                    <mat-select formControlName="branch" placeholder="Select Day/Market" (selectionChange)="GetSalesman()">
+                                            <mat-option [value]="branch.branch_code" *ngFor="let branch of AllBranchDetail">{{branch.branch_code}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" fxFlex="30" *ngIf="UserForm.get('role').value!='salesperson' && UserForm.get('role').value!='distributor';else selectblock">
+                                    <mat-label>Enter Name</mat-label>
+                                    <input matInput type="text" formControlName="name2"  placeholder="Enter Name" autocomplete="false">
+                                </mat-form-field>
+                                <ng-template #selectblock>
+                                    <mat-form-field appearance="outline" fxFlex="30" >
+                                        <mat-label>Select Name</mat-label>
+                                        <mat-select   [(value)]="name" formControlName="name"  placeholder="Select State"  autocomplete="false">
+                                            <ng-template [ngIf]="UserForm.get('role').value=='salesperson'" [ngIfElse]="elseblock">
+                                                <mat-option [value]="sp.id" *ngFor="let sp of SalesmanDetails">{{sp.salesperson}}</mat-option>
+                                            </ng-template>
+                                            <ng-template #elseblock>
+                                                <mat-option [value]="dist.id" *ngFor="let dist of DistributorList">{{dist.distributor}}</mat-option>
+                                            </ng-template>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </ng-template>
+                                <mat-form-field appearance="outline" fxFlex="30">
+                                    <mat-label>User Id<sup>*</sup></mat-label>
+                                   <input matInput type="text" formControlName="userName" placeholder="Enter Username" autocomplete="false">
+                                    <mat-icon matSuffix>user</mat-icon>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" fxFlex="30">
+                                    <mat-label>Password<sup>*</sup></mat-label>
+                                    <input matInput (input)="onPasswordInput()" formControlName="password" [type]="visible?'password':'text'" placeholder="Enter Password" autocomplete="new-password">
+                                    <mat-icon matSuffix (click)="visible= !visible">{{visible? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    <mat-error *ngIf="UserForm.get('password').hasError('required')">Please Enter password</mat-error>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" fxFlex="30">
+                                    <mat-label>Confirm Password<sup>*</sup></mat-label>
+                                    <input matInput (input)="onPasswordInput()" formControlName="confirmpassword" [type]="hide?'password':'text'" placeholder="Enter confirm password" autocomplete="off">
+                                    <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    <mat-error *ngIf="UserForm.get('confirmpassword').hasError('required')">Please confirm your password</mat-error>
+                                    <mat-error *ngIf="UserForm.get('confirmpassword').invalid && !UserForm.get('confirmpassword').hasError('required')">Passwords don't match</mat-error>
+                                </mat-form-field>
+                            </div>
+                        <div fxFlex fxLayout="row wrap">
+                            <div fxFlex="85"></div>
+                            <div fxFlex="15">
+                                <button (click)="createUserpass()" [disabled]="UserForm.invalid"  mat-raised-button color="primary">
+                                    <mat-icon>save</mat-icon>Save</button>
+                            </div>
+
+                        </div>
+                        </div>
+
+                    <div fxFlex="50" fxLayout="column" fxLayoutAlign="start" *ngIf="dataSource?.data?.length>0" >
+                        <mat-divider></mat-divider>
+                        <div fxFlex=""  fxLayout="column"></div>
+                        <div class="example-container">
+                            <table mat-table #Sort="matSort" matSort [dataSource]="dataSource" class=" table mat-elevation-z0" >
+                                <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column|firstAnd_Split}} </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <p *ngIf="column!='action';else elseblock">{{element[column]}}</p>
+                                        <ng-template #elseblock style="padding-left:-10px" align="left">
+                                            <button (click)="changePassowrd(element)" matTooltip="Click to change password" mat-icon-button><mat-icon>lock</mat-icon></button>
+                                            <button matTooltip="Click to Delete User" (click)="deleteUser(element)"  mat-icon-button><mat-icon>delete</mat-icon></button>
+                                        </ng-template>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            </table>
+                            <div *ngIf="dataSource?.data?.length<=0" class="h3 m-16">No Record Found.</div>
+                            <mat-divider *ngIf="dataSource?.data?.length<=0"></mat-divider>
+                            <mat-paginator #Paginator="matPaginator" [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
+                        </div>
+            </div>
+        </div>
+            </div>
+            </div>
+        </div>
+    </div>
+

@@ -1,0 +1,28 @@
+<div class="page-layout simple fullwidth inner-scroll" fxLayout="column" id="showorderdetail">
+    <div class="content p-20" pristinePerfectScrollbar>
+        <div class="mb-24" fxLayout="column" fxLayoutAlign="start">
+            <div class="mat-card mat-elevation-z1" fxFlex="1 0 auto" fxLayout="column" fxLayoutAlign="start">
+                <div class="h4 mb-8 p-16" style="background-color: rgba(255,192,203,0.73)">Show Order
+                </div>
+                <div fxFlex="" fxLayout="row" class="p-16" fxLayoutAlign="start" fxLayoutGap="10px" fxLayout.lt-sm="column">
+                    <div class="square"></div>
+                    <div>Got Order</div>
+                    <div class="square3"></div>
+                    <div>No Order</div>
+                    <div class="square1"></div>
+                    <div>Approved</div>
+                    <div class="square2"></div>
+                    <div>Reject</div>
+
+                </div>
+
+                     <mat-divider></mat-divider>
+
+                        <div class="ng-table table_paginator">
+                            <ng2-smart-table [settings]="serachresult"
+                                             [source]="serachresultdatasource"></ng2-smart-table>
+                        </div>
+                </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,150 @@
+@import "src/@pristinebase/scss/pristine";
+#AddLocationMaster {
+  .wrapper {
+    max-width: 100%;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .alert-danger{
+    color: red;
+    position:absolute;
+    display: block;
+    z-index: 1;
+    margin-top: -20px;
+    line-height:inherit;
+
+  }
+
+  .example-container {
+    overflow-x: auto;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th {
+        padding: 8px;
+        font-size: 20px!important;
+      }
+
+      td {
+        padding: 8px;
+      }
+
+      th.mat-column-pick_no {
+        font-weight: bold;
+      }
+
+      th.mat-column-priorty {
+        font-weight: bold;
+      }
+
+      th.mat-column-created_datetime {
+        font-weight: bold;
+      }
+
+      td.mat-column-pick_no {
+
+      }
+
+      td.mat-column-priorty {
+        mat-select {
+          width: 100px;
+        }
+      }
+
+      td.mat-column-created_datetime {
+      }
+
+      td.mat-column-Action {
+        width: 20px;
+      }
+
+    }
+  }
+  .wrapper{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    .file-upload{
+      height:200px;
+      width:200px;
+      border-radius: 100px;
+      position:relative;
+
+      display:flex;
+      justify-content:center;
+      align-items: center;
+
+      border:4px solid #FFFFFF;
+      overflow:hidden;
+      background-image: linear-gradient(to bottom, #2590EB 50%, #FFFFFF 50%);
+      background-size: 100% 200%;
+      transition: all 1s;
+      color: #FFFFFF;
+      font-size:100px;
+
+      input[type='file']{
+        height:250px;
+        width:250px;
+        position:absolute;
+        top:-45px;
+        left:0;
+        opacity:0;
+        cursor:pointer;
+
+      }
+
+      &:hover{
+
+        background-position: 0 -100%;
+
+        color:#2590EB;
+
+      }
+
+
+    }
+  }
+
+  ::ng-deep .mat-form-field-flex > .mat-form-field-infix { padding: 0.4em 0px !important;}
+  ::ng-deep .mat-form-field-label-wrapper { top: -1.5em; }
+
+  ::ng-deep .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+    transform: translateY(-1.1em) scale(.75);
+    width: 133.33333%;
+  }
+  .upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    height: 70%;
+  }
+
+  .btn {
+    border: 1px solid #dbdbdb;
+    color: gray;
+    height: 50%;
+    background-color: white;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: bold;
+    width: 100%;
+
+  }
+
+  .upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 50%;
+    opacity: 0;
+
+  }
+}

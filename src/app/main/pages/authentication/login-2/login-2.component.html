@@ -1,0 +1,98 @@
+<div id="login" class="inner-scroll" fxLayout="row" fxLayoutAlign="start">
+
+    <div id="login-intro" fxFlex fxHide fxShow.gt-xs>
+
+        <div class="logo" [@animate]="{value:'*',params:{scale:'0.2'}}">
+            <img src="assets/images/logos/mylogo.png" alt="Logo">
+        </div>
+
+        <div class="title" [@animate]="{value:'*',params:{delay:'50ms',y:'25px'}}">
+            Welcome to the PristineFulFil
+        </div>
+
+        <div class="description" [@animate]="{value:'*',params:{delay:'100ms',y:'25px'}}">
+            Pristinefulfil offers complete warehousing solution covering all aspects of warehouse operations.
+            It is fast to implement and adapt. Customers are expericiencing immediate improvement in operational
+            efficiency and have used pristinefulfil to better manage their warehouse.
+        </div>
+
+    </div>
+
+    <div id="login-form-wrapper" pristinePerfectScrollbar
+         [@animate]="{value:'*',params:{delay:'300ms',x:'100%'}}">
+
+        <div id="login-form">
+
+            <div class="logo" fxHide.gt-xs>
+                <img width="80" src="assets/images/logos/mylogo.png">
+            </div>
+
+            <div class="title">LOGIN TO YOUR ACCOUNT</div>
+
+            <form name="loginForm" [formGroup]="loginForm" (ngSubmit)="loginUser(loginForm.value)" novalidate>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>User Id</mat-label>
+                    <input matInput formControlName="email">
+                    <mat-icon matSuffix class="secondary-text">mail</mat-icon>
+                    <mat-error *ngIf="loginForm.get('email').hasError('required')">
+                        User Id is required
+                    </mat-error>
+<!--                    <mat-error-->
+<!--                        *ngIf="!loginForm.get('email').hasError('required') &&-->
+<!--                                loginForm.get('email').hasError('email')">-->
+<!--                        Please enter a valid email address-->
+<!--                    </mat-error>-->
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Password</mat-label>
+                    <input matInput type="password" formControlName="password">
+                    <mat-icon matSuffix class="secondary-text">vpn_key</mat-icon>
+                    <mat-error>
+                        Password is required
+                    </mat-error>
+                </mat-form-field>
+
+                <div class="remember-forgot-password" fxLayout="row" fxLayout.xs="column"
+                     fxLayoutAlign="space-between center">
+<!--                    <mat-checkbox class="remember-me" aria-label="Remember Me">-->
+<!--                        Remember Me-->
+<!--                    </mat-checkbox>-->
+
+<!--                    <a class="forgot-password" [routerLink]="'/pages/auth/forgot-password-2'">-->
+<!--                        Forgot Password?-->
+<!--                    </a>-->
+                </div>
+
+                <button  *ngIf="!loading" mat-raised-button color="warn" class="submit-button loginbutton" aria-label="LOGIN"
+                        [disabled]="loginForm.invalid">
+                    LOGIN
+                </button>
+                <mat-spinner *ngIf="loading" [diameter]="30"></mat-spinner>
+
+            </form>
+
+<!--            <div class="separator">-->
+<!--                <span class="text">OR</span>-->
+<!--            </div>-->
+
+<!--            <div fxLayout="column" fxLayoutAlign="start center">-->
+
+<!--                <button mat-raised-button class="google">-->
+<!--                    Log in with Google-->
+<!--                </button>-->
+
+<!--                <button mat-raised-button class="facebook">-->
+<!--                    Log in with Facebook-->
+<!--                </button>-->
+
+<!--            </div>-->
+
+<!--            <div class="register" fxLayout="column" fxLayoutAlign="center center">-->
+<!--                <span class="text">Don't have an account?</span>-->
+<!--                <a class="link" [routerLink]="'/pages/auth/register-2'">Create an account</a>-->
+<!--            </div>-->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,174 @@
+<div class="page-layout simple fullwidth inner-scroll" fxLayout="column" id="AddSalesperson">
+    <div class="content p-20" pristinePerfectScrollbar>
+        <div class="mb-24" fxLayout="column" fxLayoutAlign="start">
+            <div class="mat-card mat-elevation-z1 " fxFlex="1 0 auto" fxLayout="column" fxLayoutAlign="start">
+                <div class="h4 mb-8 p-16" *ngIf="flag=='view';" style="background-color: rgba(255,192,203,0.73)">
+                    Edit RSM/Salesperson
+                </div>
+                <div class="h4 mb-8 p-16" *ngIf="flag=='insert'"  style="background-color: rgba(255,192,203,0.73)">
+                    Add RSM/Salesperson
+                </div>
+                <div  [formGroup]="EditSalesperson" class="p-8" fxFlex fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start" >
+                    <div fxFlex class="p-8" fxLayout="column" fxLayout.lt-sm="column" fxLayoutAlign="start" >
+                        <div  fxLayout="row" fxLayoutGap="50px">
+                            <mat-form-field appearance="outline" fxFlex="47">
+                                <mat-label>Select Type</mat-label>
+                                <mat-select  formControlName="type"   placeholder="Select Type" >
+                                    <mat-option [value]="'RSM'" >RSM</mat-option>
+                                    <mat-option [value]="'Salesperson'" >Salesperson</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" fxFlex="47" >
+                                <mat-label>Select Branch</mat-label>
+                                <mat-select  formControlName="branch"  placeholder="Select Branch" >
+                                    <mat-option [value]="branch.branch_code" *ngFor="let branch of AllBranchDetail" >{{branch.branch_code}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div style="border: 1px solid #f2f2f2;border-radius:20px;background-color: #efefef;padding:7px;">Personal Detail</div>
+                    <div fxFlex class="p-8" fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="start">
+                            <mat-form-field appearance="outline" fxFlex="31.5">
+                                <mat-label>First Name</mat-label>
+                                <input  matInput type="text" formControlName="first_name"  placeholder="First Name" autocomplete="false">
+                                <mat-error
+                                      *ngIf="EditSalesperson.get('first_name').hasError('required') && EditSalesperson.get('first_name').dirty && EditSalesperson.get('first_name').touched">
+                                   First Name is required*
+                             </mat-error>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" fxFlex="31.5">
+                                <mat-label>Last Name</mat-label>
+                                <input  matInput type="text" formControlName="last_name"  placeholder="Last Name" autocomplete="false">
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" fxFlex="31.5">
+                                <mat-label>Mobile</mat-label>
+                                <input matInput type="tel" formControlName="mobile"  placeholder="Mobile" autocomplete="false">
+                                <mat-error
+                                      *ngIf="EditSalesperson.get('mobile').hasError('required') && EditSalesperson.get('mobile').dirty && EditSalesperson.get('mobile').touched">
+                                    Contact Number required*
+                                </mat-error>
+                                <mat-error  *ngIf="EditSalesperson.get('mobile').hasError('pattern') && EditSalesperson.get('mobile').hasError('maxlength')">
+                                     Invalid Mobile Number
+                             </mat-error>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline"  fxFlex="47">
+                                <mat-label>Mobile2</mat-label>
+                                <input matInput type="text" formControlName="mobile2"  placeholder="Mobile2" autocomplete="false">
+                                <mat-error  *ngIf="EditSalesperson.get('mobile2').hasError('pattern') && EditSalesperson.get('mobile2').hasError('maxlength')">
+                                     Invalid Mobile Number
+                            </mat-error>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" fxFlex="47" >
+                            <mat-label>Remark</mat-label>
+                            <textarea matInput formControlName="remark"  placeholder="Remark"></textarea>
+                        </mat-form-field>
+                    </div>
+                    <div style="border: 1px solid #f2f2f2;border-radius:20px;background-color: #efefef;padding:7px;">Address</div>
+                    <div fxFlex class="p-8" fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="start">
+                        <mat-form-field appearance="outline" fxFlex="18.5" >
+                            <mat-label>State</mat-label>
+                            <mat-select [(value)]="state"   (selectionChange)="GetAllDist(state)" formControlName="state" placeholder="Select Type" autocomplete="false">
+                                <mat-option [value]="state.state" *ngFor="let state of AllState" >{{state.state}}</mat-option>
+                            </mat-select>
+                            <mat-error
+                                  *ngIf="EditSalesperson.get('state').hasError('required') && EditSalesperson.get('state').dirty && EditSalesperson.get('state').touched">
+                                            required* field
+                         </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" fxFlex="18.5">
+                            <mat-label>District</mat-label>
+                            <mat-select  [(value)]="dist"  formControlName="district" (selectionChange)="GetAllArea(dist)"  placeholder="Select Type" autocomplete="false">
+<!--                                <mat-option  [value]="data.data.district">{{data.data.district}}</mat-option>-->
+                                <mat-option [value]="dist.district_name" *ngFor="let dist of AllDist" >{{dist.district_name}}</mat-option>
+                            </mat-select>
+                            <mat-error
+                                  *ngIf="EditSalesperson.get('district').hasError('required') && EditSalesperson.get('district').dirty && EditSalesperson.get('district').touched">
+                                            required* field
+                         </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" fxFlex="18.5" >
+                            <mat-label>Area</mat-label>
+                            <mat-select [(value)]="area"   formControlName="area" (selectionChange)="GetAllStreet(area)"  placeholder="Select Type" autocomplete="false">
+<!--                                <mat-option  [value]="data.data.area">{{data.data.area}}</mat-option>-->
+                                <mat-option  [value]="area.area_name" *ngFor="let area of AllArea" >{{area.area_name}}</mat-option>
+                            </mat-select>
+                            <mat-error
+                                  *ngIf="EditSalesperson.get('area').hasError('required') && EditSalesperson.get('area').dirty && EditSalesperson.get('area').touched">
+                            required* field
+                        </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" fxFlex="18.5"  >
+                            <mat-label>Street</mat-label>
+                            <mat-select   formControlName="street" placeholder="Select Type" autocomplete="false">
+                                <mat-option [value]="street.street_name" *ngFor="let street of Allstreet">{{street.street_name}}</mat-option>
+                            </mat-select>
+                            <mat-error
+                                  *ngIf="EditSalesperson.get('street').hasError('required') && EditSalesperson.get('street').dirty && EditSalesperson.get('street').touched">
+                                            required* field
+                         </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" fxFlex="18.5"  >
+                            <mat-label>Country</mat-label>
+                            <input matInput type="text" formControlName="country"  placeholder="Country" autocomplete="false">
+                            <mat-error
+                                  *ngIf="EditSalesperson.get('country').hasError('required') && EditSalesperson.get('country').dirty && EditSalesperson.get('country').touched">
+                                            required* field
+                         </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" fxFlex="47">
+                            <mat-label>Line 1</mat-label>
+                            <textarea matInput type="text" formControlName="line1"   placeholder="Line 1" autocomplete="false"></textarea>
+                            <mat-error
+                                    *ngIf="EditSalesperson.get('line1').hasError('required') && EditSalesperson.get('line1').dirty && EditSalesperson.get('line1').touched">
+                                required* field
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" fxFlex="47" >
+                            <mat-label>Line 2</mat-label>
+                            <textarea matInput type="text" formControlName="line2" placeholder="Line 2" autocomplete="false"></textarea>
+                        </mat-form-field>
+                    </div>
+                    <div style="border: 1px solid #f2f2f2;border-radius:20px;background-color: #efefef;padding:7px;">Upload</div>
+                        <div  fxLayout="row" fxFlexAlign="start" >
+                            <div class="upload-image" >
+                                <div #image class="image-wrapper"></div>
+                                <div class="browse-btn">
+                                    <input type="file" #file  name="cameraImg" accept='image/*' id="cameraImg" (change)="onSelectedFile($event)" multiple/>
+                                    <div class="browse-image">
+                                        <!--                                        <mat-icon>camera_alt</mat-icon>-->
+                                        <img src="assets/images/camera.png"  />
+                                        <p style="font-weight: 600">Browse image</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="upload-image" >
+                                <div #image class="image-wrapper"></div>
+                                <div class="browse-btn" *ngIf="!(urls==null)">
+                                    <div class="browse-image">
+                                        <!--                                        <mat-icon>camera_alt</mat-icon>-->
+                                        <img [src]="urls" class="img"/>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                                <div fxFlex >
+                                    <button *ngIf="flag=='view'" (click)="UpdateSalesperson()" [disabled]="EditSalesperson.invalid" style="float:right" mat-raised-button color="primary">
+                                        <mat-icon>update</mat-icon>&nbsp;Update
+                                    </button>
+                                    <button *ngIf="flag=='insert'" (click)="AddSalesperson()" [disabled]="EditSalesperson.invalid" style="float:right" mat-raised-button color="primary">
+                                        <mat-icon>save</mat-icon>&nbsp;Save
+                                    </button>
+                                </div>
+                        </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+

@@ -1,0 +1,223 @@
+<div class="page-layout simple fullwidth inner-scroll" fxLayout="column" id="AddLocationMaster">
+    <div class="content p-20" pristinePerfectScrollbar>
+        <div class="mb-24" fxLayout="column" fxLayoutAlign="start">
+            <div class="mat-card mat-elevation-z1" fxFlex="1 0 auto" fxLayout="column" fxLayoutAlign="start">
+                <div class="h4 mb-8 p-16" style="background-color: rgba(255,192,203,0.73)">Add State/District/Area/Street
+                </div>
+<!--                  <div fxLayout="column" fxLayoutAlign="start">-->
+<!--                      <mat-divider></mat-divider>-->
+<!--                  </div>-->
+                <div fxLayout="column" class="p-16">
+                <mat-tab-group >
+                    <mat-tab label="State">
+                        <div fxFlex  fxLayout="row" class="p-16" fxLayoutGap="30px">
+                            <div fxFlex="30">
+                                <mat-form-field appearance="outline" style="width:100%!important;" >
+                                    <mat-label>State</mat-label>
+                                    <input matInput type="text" [formControl]="StateName" [matAutocomplete]="sta" placeholder="State" >
+                                    <mat-autocomplete #sta="matAutocomplete">
+                                        <mat-option *ngFor="let state of AllState" [value]="state.state">{{state.state}}</mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <div class="pt-8" >
+                                <button (click)="AddState()" style="border-radius: 20px"  mat-raised-button color="primary">
+                                    <mat-icon>save</mat-icon> Save</button>
+                            </div>
+                        </div>
+                        <div fxLayout="column" class="pl-8" fxflex="40">
+                          <div class="example-container">
+                            <table mat-table #TableOneSort="matSort" matSort [dataSource]="dataSource"  >
+                                <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        <div class="filterHeader">
+                                            <b mat-sort-header>{{column|firstAnd_Split}}</b><br>
+                                            <input (keyup)="applyFilter($event.target.value,column)"
+                                                   *ngIf="column!='Action' "
+                                                   [placeholder]="column|firstAnd_Split">
+                                        </div>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            </table>
+                          </div>
+                            <mat-paginator #TableOnePaginator="matPaginator" [pageSizeOptions]="[10, 20, 50,100]" showFirstLastButtons></mat-paginator>
+
+                          </div>
+                    </mat-tab>
+                    <mat-tab label="District">
+                            <div fxFlex class="p-16" fxLayout="row wrap" fxLayoutGap="20px">
+                                <div fxFlex="30">
+                                <mat-form-field appearance="outline" style="width:100%!important;" >
+                                    <mat-label>State</mat-label>
+                                    <mat-select matInput  [(value)]="state" (selectionChange)="GetDistrict(state)"  placeholder="state" autocomplete="false">
+                                        <mat-option [value]="state.id" *ngFor="let state of AllState">{{state.state}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                </div>
+                                <div fxFlex="30">
+
+                                    <mat-form-field  appearance="outline" style="width:100%!important;">
+                                        <mat-label>District</mat-label>
+                                        <input type="text"  [formControl]="district" matInput [matAutocomplete]="auto" placeholder="District">
+                                        <mat-autocomplete #auto="matAutocomplete">
+                                            <mat-option *ngFor="let pf of DistList" [value]="pf.district_name">{{pf.district_name}}</mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+
+                                </div>
+                                <div class="pt-8">
+                                    <button (click)="AddDistrict()" mat-raised-button color="primary">
+                                        <mat-icon>save</mat-icon> Save</button>
+                                </div>
+                            </div>
+                        <div fxLayout="column" class="p-4" fxFlex>
+                            <div class="example-container">
+                            <table mat-table #TableTwoSort="matSort" matSort [dataSource]="DistdataSource" class=" table mat-elevation-z0" >
+                                <ng-container *ngFor="let column of displayedDistColumns" [matColumnDef]="column">
+                                    <th mat-header-cell *matHeaderCellDef >
+                                        <div class="filterHeader">
+                                            <b mat-sort-header>{{column|firstAnd_Split}}</b><br>
+                                            <input (keyup)="applyFilterDistrictData($event.target.value,column)"
+                                                   *ngIf="column!='Action'"
+                                                   [placeholder]="column|firstAnd_Split">
+                                        </div>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedDistColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedDistColumns;"></tr>
+                            </table>
+                            </div>
+                            <mat-paginator #TableTwoPaginator="matPaginator" [pageSizeOptions]="[10, 20, 50,100]" showFirstLastButtons ></mat-paginator>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="Area">
+                        <form>
+                            <div fxFlex class="p-16" fxLayout="row wrap" fxLayoutGap="20px">
+                                <div fxFlex="25">
+                                <mat-form-field appearance="outline" style="width:100%!important;" >
+                                    <mat-label>State</mat-label>
+                                    <mat-select [(value)]="stateId" (selectionChange)="GetDistrict(stateId)" matInput type="text" placeholder="state" autocomplete="false">
+                                        <mat-option [value]="state.id" *ngFor="let state of AllState">{{state.state}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                </div>
+                                <div fxFlex="25">
+                                    <mat-form-field appearance="outline" style="width:100%!important;" >
+                                    <mat-label>District</mat-label>
+                                    <mat-select [(value)]="DistId" matInput type="text" (selectionChange)="GetArea(DistId)" placeholder="District" >
+                                        <mat-option [value]="dist.dist_Id" *ngFor="let dist of DistList">{{dist.district_name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                </div>
+                                <div fxFlex="25">
+                                <mat-form-field appearance="outline" style="width:100%!important;" >
+                                    <mat-label>Area</mat-label>
+                                    <input matInput type="text" [formControl]="area" [matAutocomplete]="are"   placeholder="Area" >
+                                    <mat-autocomplete #are="matAutocomplete">
+                                        <mat-option *ngFor="let area of AllArea" [value]="area.area_name">{{area.area_name}}</mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                </div>
+                                <div class="pt-8" style="float:right" >
+                                    <button (click)="AddArea()"  mat-raised-button color="primary">
+                                        <mat-icon>save</mat-icon> Save</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div fxLayout="column" class="p-4" >
+                            <div class="example-container">
+                            <table mat-table #TableThreeSort="matSort" matSort [dataSource]="AreadataSource" class=" table mat-elevation-z0" >
+                                <ng-container *ngFor="let column of displayedAreaColumns" [matColumnDef]="column">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        <div class="filterHeader">
+                                            <b mat-sort-header>{{column|firstAnd_Split}}</b><br>
+                                            <input (keyup)="applyFilterAreaData($event.target.value,column)"
+                                                   *ngIf="column!='Action'"
+                                                   [placeholder]="column|firstAnd_Split">
+                                        </div>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedAreaColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedAreaColumns;"></tr>
+                            </table>
+                            </div>
+                            <mat-paginator #TableThreePaginator="matPaginator" [pageSizeOptions]="[10, 20, 50,100]" showFirstLastButtons ></mat-paginator>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="Street">
+                        <form>
+                            <div fxFlex class="p-16" fxLayout="row wrap" fxLayoutGap="20px">
+                                <div fxFlex="20">
+                                    <mat-form-field appearance="outline" style="width:100%!important;" >
+                                        <mat-label>State</mat-label>
+                                        <mat-select [(value)]="state_Id" (selectionChange)="GetDistrict(state_Id)" matInput type="text" placeholder="state" autocomplete="false">
+                                            <mat-option [value]="state.id" *ngFor="let state of AllState">{{state.state}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div fxFlex="20">
+                                    <mat-form-field appearance="outline" style="width:100%!important;" >
+                                        <mat-label>District</mat-label>
+                                        <mat-select [(value)]="Dist_Id" (selectionChange)="GetArea(Dist_Id)" matInput type="text" placeholder="District" autocomplete="false">
+                                            <mat-option [value]="dist.dist_Id" *ngFor="let dist of DistList">{{dist.district_name}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div fxFlex="20">
+                                    <mat-form-field appearance="outline" style="width:100%!important;" >
+                                        <mat-label>Area</mat-label>
+                                        <mat-select [(value)]="Area_Id" matInput type="text" placeholder="Area" (selectionChange)="GetAllStreet(Area_Id)" >
+                                            <mat-option [value]="area.area_Id" *ngFor="let area of AllArea">{{area.area_name}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div fxFlex="20">
+                                    <mat-form-field appearance="outline" style="width:100%!important;" >
+                                        <mat-label>Street</mat-label>
+                                        <input matInput type="text" [formControl]="street" [matAutocomplete]="stre"    placeholder="Street" >
+                                        <mat-autocomplete #stre="matAutocomplete">
+                                            <mat-option *ngFor="let street of Allstreet" [value]="street.street_name">{{street.street_name}}</mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                                <div class="pt-8" >
+                                    <button (click)="AddStreet()"  mat-raised-button color="primary">
+                                        <mat-icon>save</mat-icon> Save</button>
+                                </div>
+                            </div>
+
+                        </form>
+                        <div fxLayout="column" class="p-4">
+                           <div class="example-container">
+                            <table mat-table #TablefourSort="matSort" matSort [dataSource]="StreetdataSource" class=" table mat-elevation-z0" >
+                                <ng-container *ngFor="let column of displayedStreetColumns" [matColumnDef]="column">
+                                    <th mat-header-cell *matHeaderCellDef >
+                                        <div class="filterHeader">
+                                            <b mat-sort-header>{{column|firstAnd_Split}}</b><br>
+                                            <input (keyup)="applyFilterStreetData($event.target.value,column)"
+                                                   *ngIf="column!='Action'"
+                                                   [placeholder]="column|firstAnd_Split">
+                                        </div>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedStreetColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedStreetColumns;"></tr>
+                            </table>
+                           </div>
+                            <mat-paginator #TablefourPaginator="matPaginator" [pageSizeOptions]="[10, 20, 50,100]" showFirstLastButtons ></mat-paginator>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

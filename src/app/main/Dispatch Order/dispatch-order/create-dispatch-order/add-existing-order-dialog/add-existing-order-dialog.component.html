@@ -1,0 +1,29 @@
+<div fxFlex fxLayout="column"  fxLayoutAlign="start" id="AddLocationMaster">
+    <div style="margin-top: -35px"  mat-dialog-title>
+        <div class="h5 mb-8 pt-16" >Select order no to add order into existing order
+        </div>
+        <div  fxLayout="column"  fxLayoutAlign="start">
+            <mat-divider></mat-divider>
+        </div>
+    </div>
+    <div fxFlex="" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="7px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="10px">
+        <mat-form-field appearance="outline">
+            <mat-label>select order no</mat-label>
+            <mat-select #inputValue >
+                <mat-option [value]="data.order_no"  *ngFor="let data of data">{{data.order_no}}</mat-option>
+            </mat-select>
+
+        </mat-form-field>
+
+    </div>
+    <div fxLayout="row" class="pt-16" fxLayoutAlign="end">
+        <button (click)="dialogRef.close({condition:'true',message:inputValue.value})"  class="mat-accent mr-16"
+                mat-raised-button>Add
+        </button>
+        <button (click)="dialogRef.close(false)"  color="warn" mat-raised-button>Cancel</button>
+    </div>
+
+</div>
+
+
+

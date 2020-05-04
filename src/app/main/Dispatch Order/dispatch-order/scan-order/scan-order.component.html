@@ -1,0 +1,265 @@
+<div class="page-layout simple fullwidth inner-scroll" fxLayout="column" id="scanOrder">
+    <div class="content p-20" pristinePerfectScrollbar>
+        <div class="mb-24" fxLayout="column" fxLayoutAlign="start">
+            <div class="mat-card mat-elevation-z1" fxFlex="1 0 auto" fxLayout="column" fxLayoutAlign="start">
+                <div class="h4 mb-8 p-16" style="background-color: rgba(255,192,203,0.73);height:60px">Scan Order
+                    <button (click)="showSelectBox =!showSelectBox" mat-icon-button matTooltip="Reprint Packing Slip" style="margin-left:10px;margin-top: -10px;background-color:#ffffff;float: right;box-shadow: 1px 1px 1px 1px #ffffff">
+                        <mat-icon>print</mat-icon>
+                    </button>
+                    <mat-form-field *ngIf="showSelectBox" g appearance="outline" style="margin-left:10px;float:right;margin-top:-10px;
+                    width:25%;color:white;">
+                        <mat-label>Select box_no</mat-label>
+                        <mat-select #box_no (selectionChange)="getPackingslipReportReprint(order_id,box_no.value)">
+                            <mat-option [value]="box.box_no" *ngFor="let box of box_id">{{box.box_no}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="showSelectBox" appearance="outline"  style="margin-left:10px;float:right;margin-top: -10px;width:25%">
+                        <mat-label>Select retailer</mat-label>
+                        <mat-select [(value)]="order_id" (selectionChange)="getBoxiDtoprintreport(order_id)">
+                            <mat-option [value]="data.order_no"
+                                        *ngFor="let data of dataSource?.data">{{data.order_no+' '+'('+(data.retailer)+')'}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+
+                </div>
+                <div fxFlex="" fxLayout="column" fxLayoutAlign="start" fxLayoutGap.lt-sm="10px" class="p-8">
+                    <div fxLayout="row" fxLayoutGap="30px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="10px">
+                        <div fxFlex="30">
+                            <b>Order no:</b>&nbsp;&nbsp;{{DataTableDetail.order_no}}
+                        </div>
+                        <div fxFlex="30">
+                            <b>Distributor:</b>&nbsp;&nbsp;{{DataTableDetail.distributor}}
+                        </div>
+                        <div fxFlex="30">
+                            <b>Address:</b>&nbsp;&nbsp;{{DataTableDetail.address}}
+                        </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="30px" class="pt-8" fxLayout.lt-sm="column" >
+                        <div fxFlex="30">
+                            <b>Order date:</b>&nbsp;&nbsp;{{DataTableDetail.created_on}}
+                        </div>
+                        <div fxFlex="30">
+                            <b>Total qty:</b>&nbsp;&nbsp;{{DataTableDetail.new_line_total_qty}}
+                        </div>
+                        <div fxFlex="30">
+                            <b >Total retailer:</b>&nbsp;&nbsp;<b style="font-weight: 400" *ngIf="dataSource?.data?.length>0">{{dataSource?.data?.length}}</b>
+                        </div>
+                    </div>
+                    <div class="pt-8" >
+                        <b>Pending To Scan:</b>&nbsp;&nbsp;{{pendingQty}}
+                    </div>
+                </div>
+                <mat-divider></mat-divider>
+                <div fxFlex="" fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="start" class="p-8">
+                    <div fxFlex="50"  fxLayout="column" fxLayoutAlign="start">
+                        <div class="pl-8" fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="40px">
+                            <mat-form-field appearance="outline" fxFlex="60" fxFlexAlign="start" fxFlexAlign.lt-sm="start">
+                                <mat-label>Select retailer to scan</mat-label>
+                                <mat-select [(value)]="order_no" (selectionChange)="getRetailer()">
+                                    <mat-option [value]="data.order_no"
+                                                *ngFor="let data of dataSource?.data">{{data.order_no+' '+'('+(data.retailer)+')'}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <div fxFlex="40" class="p-4"   *ngIf="BoxNo.length>0 && BoxNo[0].condition.toLowerCase()=='false';else elseblock" >
+                                <button mat-raised-button color="accent"   (click)="GetBOxId(order_no)">Get box id
+                                </button>
+                            </div>
+                            <ng-template #elseblock>
+                                <div fxFlex="40" class="p-4"  *ngIf="!(order_no=='' ||order_no==null || order_no==undefined)">
+                                    <button mat-raised-button color="accent"  (click)="GetBOxId(order_no)">Get new box id
+                                    </button>
+                                </div>
+                            </ng-template>
+<!--                            <div fxLayoutAlign="start" fxFlex="50" class="pt-8"  *ngIf="!(this.retailer==null)">-->
+<!--                                <div><b>Retailer:</b>&nbsp;{{this.retailer}}</div>-->
+<!--                            </div>-->
+                        </div>
+                        <div  fxLayout="row" fxLayoutAlign="center"  fxLayoutGap="80px" *ngFor="let box of BoxNo">
+                            <div>
+                                <b>Box Id:</b>&nbsp;{{box.box_no}}
+                            </div>
+                            <div>
+                               <b>Qty:</b>&nbsp;{{box.qty}}
+                            </div>
+                        </div>
+                        <div class="p-8"  fxLayout="column" fxLayoutAlign="center"    *ngIf="!(order_no==null || order_no==undefined)">
+                            <mat-form-field  appearance="outline" class="scanInputField" style="width:60%;" fxFlexAlign="center" fxFlexAlign.lt-sm="start">
+                                <mat-label>Enter barcode to scan</mat-label>
+                                <input  type="text" matInput [formControl]="barcode" (keyup.enter)="scanItem()">
+                            </mat-form-field>
+                        </div>
+                        <div class="p-4" fxLayoutAlign="center" *ngIf="order_no!=null || order_no!=undefined">
+                              <button mat-raised-button color="accent" (click)="CompleteScanProcess()">
+                                  <mat-icon>undo</mat-icon>&nbsp;Release
+                              </button>
+                          </div>
+                        <mat-divider></mat-divider>
+                        <div class="example-container">
+                                    <table mat-table #TableSort="matSort" matSort [dataSource]="dataSource"
+                                           class=" table mat-elevation-z0">
+                                        <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column|firstAnd_Split}} </th>
+
+                                            <td mat-cell *matCellDef="let element">
+                                                <p *ngIf="column!='action';else elseblock">{{element[column]}} </p>
+
+                                                <ng-template #elseblock>
+                                                    <button (click)="ShowScanneditem(element)" mat-icon-button matTooltip="Click to view line"
+                                                            style="margin-top: -10px;background-color:#ffffff;box-shadow: 1px 1px 1px 1px #ffffff">
+                                                        <mat-icon>visibility</mat-icon>
+                                                    </button>
+
+                                                </ng-template>
+                                            </td>
+                                            <!--                            <td mat-cell  *matCellDef="let element">Data Not found</td>-->
+                                        </ng-container>
+                                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                    </table>
+                                    <mat-paginator #TablePaginator="matPaginator" [pageSizeOptions]="[5]"
+                                                   showFirstLastButtons></mat-paginator>
+                                </div>
+                    </div>
+                    <mat-divider [vertical]="true"></mat-divider>
+                    <div fxFlex="50" class="headerTable pl-8" fxLayoutGap="10px" fxLayout="column">
+                        <p class="Heading">Retailerwise scanned item</p>
+                        <div class="example-container">
+                            <table mat-table #ScanneditemTableSort="matSort"  matSort [dataSource]="ScannedItemdataSource" class=" table mat-elevation-z0" >
+                                <ng-container *ngFor="let column of displayedScanneditemColumns" [matColumnDef]="column">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column|firstAnd_Split}} </th>
+                                    <td mat-cell *matCellDef="let element">{{element[column]}}</td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedScanneditemColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedScanneditemColumns;"></tr>
+                            </table>
+                            <div  *ngIf="ScannedItemdataSource?.data?.length<=0" class="h3 m-16">Scanned item will appear here..
+                            </div>
+                            <mat-divider></mat-divider>
+                            <mat-paginator  #ScanneditemPaginator="matPaginator" [pageSizeOptions]="[10]" showFirstLastButtons></mat-paginator>
+                        </div>
+                        <p class="Heading">Total scanned item</p>
+                        <div class="example-container">
+                            <table mat-table #TotalScanneditemTableSort="matSort"  matSort [dataSource]="TotalScannedItemdataSource" class=" table mat-elevation-z0" >
+                                <ng-container *ngFor="let column of displayedTotalScanneditemColumns" [matColumnDef]="column">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column|firstAnd_Split}} </th>
+                                    <td mat-cell *matCellDef="let element">{{element[column]}}</td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedTotalScanneditemColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedTotalScanneditemColumns;"></tr>
+                            </table>
+                            <div  *ngIf="TotalScannedItemdataSource?.data?.length<=0" class="h3 m-16">Scanned item will appear here..
+                            </div>
+                            <mat-divider></mat-divider>
+                            <mat-paginator  #TotalScanneditemPaginator="matPaginator" [pageSizeOptions]="[10]" showFirstLastButtons></mat-paginator>
+                        </div>
+                    </div>
+                </div>
+<!--                <mat-divider></mat-divider>-->
+<!--                <div fxFlex class="p-8">-->
+<!--                    <div class="example-container">-->
+<!--                        <table mat-table #TableSort="matSort" matSort [dataSource]="dataSource"-->
+<!--                               class=" table mat-elevation-z0">-->
+<!--                            <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">-->
+<!--                                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column|firstAnd_Split}} </th>-->
+
+<!--                                <td mat-cell *matCellDef="let element">-->
+<!--                                    <p *ngIf="column!='action';else elseblock">{{element[column]}} </p>-->
+
+<!--                                    <ng-template #elseblock>-->
+<!--                                        <button (click)="ShowScanneditem(element)" mat-icon-button matTooltip="Click to view line"-->
+<!--                                                style="margin-top: -10px;background-color:#ffffff;box-shadow: 1px 1px 1px 1px #ffffff">-->
+<!--                                            <mat-icon>visibility</mat-icon>-->
+<!--                                        </button>-->
+
+<!--                                    </ng-template>-->
+<!--                                </td>-->
+<!--                                &lt;!&ndash;                            <td mat-cell  *matCellDef="let element">Data Not found</td>&ndash;&gt;-->
+<!--                            </ng-container>-->
+<!--                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>-->
+<!--                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>-->
+<!--                        </table>-->
+<!--                        <mat-paginator #TablePaginator="matPaginator" [pageSizeOptions]="[5]"-->
+<!--                                       showFirstLastButtons></mat-paginator>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+                <div #content class="row" id="content" style="display:none;">
+                    <div align="center" style="line-height:1px">
+                        <h3 style="font-weight:600;color:black">Packing-Slip</h3>
+                        <h5>BELLE LINGERIES PVT. LTD.(DELHI)</h5>
+                        <h5>A-62 II FLOOR,JHILMIL INDUSTRIAL AREA DELHI,DELHI</h5>
+                    </div>
+                    <div class="col-sm-6">
+                        <table>
+                            <tr>
+                                <td style="width: 33%;border:none;padding:5px!important;text-align:start">
+                                    Deliver to:{{DataTableDetail.distributor}}
+                                </td>
+                                <td style="width: 33%;border:none;padding:5px!important;text-align:start">
+                                    Retailer:{{Item_DetailList[0]?.retailer}}
+                                </td>
+                                <td style="width: 33%;border:none;padding:5px!important;text-align:start">
+                                    Date:{{Item_DetailList[0]?.created_on|date}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 33%;border:none;padding:5px!important;text-align:start">
+                                    Order No: {{Item_DetailList[0]?.retailer_order_no}}
+                                </td>
+                                <td style="width: 33%;border:none;padding:5px!important;text-align:start">
+                                    Station:
+                                </td>
+                                <td style="width: 33%;border:none;padding:5px!important;text-align:start">
+                                    Cartoon No:{{this.Item_DetailList[0]?.box_no}}
+                                </td>
+                            </tr>
+                        </table>
+                        <hr>
+                        <table style="width:100%">
+                            <tr>
+                                <td  colspan="4">
+
+                                </td>
+                                <td  *ngFor="let item of TotalItemStyle">{{item}}</td>
+                                <td colspan="4">
+                                    Total
+                                </td>
+                            </tr>
+                            <tr *ngFor="let parent of Item_DetailList;let i=index">
+                                <td *ngIf="i==0" [rowSpan]="Item_DetailList.length+1">{{parent.retailer}}</td>
+                                <td *ngIf="Item_DetailList[i]?.item_group==Item_DetailList[i+Item_DetailList.length-1]?.item_group" [rowSpan]="parent.item_count" >{{parent.item_group}}</td>
+<!--                                <td *ngIf="Item_DetailList[i]?.item_count==1">{{parent.item_group}}</td>-->
+                                <td >{{parent.color}}</td>
+                                <td >{{parent.cup_size}}</td>
+                                <td *ngFor="let item of TotalItemStyle">{{getCalculatedQty(parent,item)}}</td>
+                                <td  colspan="4">
+                                    {{getRowWiseTotal(parent)}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td >Total</td>
+                                <td ></td>
+                                <td ></td>
+                                <td *ngFor="let item of TotalItemStyle;">{{getTotalQty(item)}}</td>
+                                <td colspan="4">
+                                    {{getRowWiseGrandTotal()}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Total</td>
+                                <td></td>
+                                <td></td>
+                                <td ></td>
+                                <td *ngFor="let item of TotalItemStyle">{{getTotalQty(item)}}</td>
+                                <td colspan="4">
+                                    {{getRowWiseGrandTotal()}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
